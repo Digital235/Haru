@@ -4,6 +4,18 @@ package blurtic.haru.APISet.Weather.Class;
  * Created by Kim W on 2016-06-13.
  */
 public class CurrentTimeInfo {
+    String for_token[] = {
+            "baseDate",
+            "baseTime",
+            "category",
+            "fcstDate",
+            "fcstTime",
+            "fcstValue",
+            "nx",
+            "ny"
+    };
+
+
     String station_Time[] = {
             "00:00","01:00","02:00","03:00","04:00","05:00",
             "06:00","07:00","08:00","09:00","10:00",
@@ -27,13 +39,29 @@ public class CurrentTimeInfo {
     // msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date=20160613&base_time=1730&nx=55&ny=127&numOfRows=100
 
     // getForecastSpaceDataRequest 를 위한 base Tiem
-    String base_Time[] = {"02:00","05:00","08:00","11:00","14:00",
-    "17:00","20:00","23:00"};
+    String base_Time[] = {"0200","0500","0800","1100","1400",
+    "1700","2000","2300"};
     //API값이 초기화 되는 시간
     //http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?ServiceKey
     // =msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date=20160613&base_time=1700&nx=55&ny=127&numOfRows=300
     // 3시간 주기, 날씨 체크 baseTime은 초기화가 되는 시간, , 00시 부터 발표난 시간까지의 정보
 
+    /*
+        DateTimeMapping()
+        동네예보 조회를 위해 BaseTime 매핑
+      */
+
+    public String DateTimeMapping(String hour)
+    {
+        int it_hour = Integer.valueOf(hour);
+        for(int i = base_Time.length ; i >= 0; i--)
+        {
+            int data = Integer.valueOf(base_Time[i]);
+            if(it_hour > data) return String.valueOf(data);
+
+        }
+        return "";
+    }
 
     String SkyMake(String rawData){
         String sky = "SKY";
@@ -88,6 +116,9 @@ public class CurrentTimeInfo {
     String TempMake(String rawData)
     {
         String temparature[] = {"T3H","TMN","TMX"};
+        String tempResult[] = {"3시간 기온", "일 최저기온", "일 최고기온"};
+
+
         // 3시간 온도, 최고온도 최저온도
 
         return "";
@@ -96,6 +127,9 @@ public class CurrentTimeInfo {
     String HumidityMake(String rawData)
     {
         String humi = "REH"; // 습도 확률
+        String humiResult = "습도";
+
+
         return "";
     }
 
@@ -103,7 +137,13 @@ public class CurrentTimeInfo {
     String RainPercentMake(String rawData)
     {
         String rainPercent = "POP"; // 강수 확률
+        String rainResult = "강수확률";
+        return "";
+    }
 
+
+    String LocationXYReturn(double lat,double lon)
+    {
         return "";
     }
 

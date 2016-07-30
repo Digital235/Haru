@@ -69,4 +69,22 @@ public class LocationInput {
 
         return result;
     }
+
+    // 기존 위,경도 -> 기상청 위,경도
+    public String ChangeLonToX()
+    {
+        double re = 6371.00877; // 지도반경
+        double grid = 5.0;
+        double setLon = 126.0;
+        double setLat = 38.0;
+
+        return "test";
+    }
+
+
+    public String ChangeLatToY()
+    {
+
+        return "test";
+    }
 }

@@ -27,7 +27,7 @@ public class MiddleInfo {
             "wf4Pm","wf5Am","wf5Pm",
             "wf6Am","wf6Pm","wf7Am",
             "wf7Pm","wf8","wf9",
-            "wf10"};
+            "wf10"}; // 12 ( 0 ~ 12) 13
     public static final String checkTempMaxData[] = {
            "taMax3","taMax4","taMax5",
             "taMax6","taMax7","taMax8",
