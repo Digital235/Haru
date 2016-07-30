@@ -149,8 +149,8 @@ public class URLConnectionManager extends Thread{
     public String makeMiddleTempURL(String inputLocation)
     {
         String regId = "11H10701";
-        String currentDay = mCurrentTimeAndDay.get(0) + mCurrentTimeAndDay.get(1) + mCurrentTimeAndDay.get(2);
-        String time = MiddleBaseTime(mCurrentTimeAndDay.get(4));
+        String currentDay = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) + mCurrentTimeAndDay.get(DAY);
+        String time = MiddleBaseTime(mCurrentTimeAndDay.get(HOUR));
 
         String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature?ServiceKey="+st_key +
             "&regId="+regId + "&tmFc="+currentDay+time+"&pageNo=1&numOfRows=1";
