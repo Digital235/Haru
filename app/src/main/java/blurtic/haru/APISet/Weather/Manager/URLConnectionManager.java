@@ -34,8 +34,11 @@ import blurtic.haru.APISet.Weather.Message.HandlerMessage;
  * Created by Kim W on 2016-06-13.
  */
 
-
-// 중기 예보를 먼저 받고, 그다음 단기 예보를 받아야함
+// WindMake(String rawData)
+    // LightMake
+    // typeMake
+    // SkyMake
+    // 중기 예보를 먼저 받고, 그다음 단기 예보를 받아야함
 
     /*
         16-07-30
@@ -97,6 +100,14 @@ public class URLConnectionManager extends Thread{
         if(base_time == "") return "";
 
         return base_time;
+    }
+
+    String StringToCategory(String category)
+    {
+
+
+
+        return "";
     }
 
     public String makeSpaceDataURL(String inputLocation)

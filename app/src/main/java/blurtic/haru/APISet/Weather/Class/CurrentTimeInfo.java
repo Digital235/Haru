@@ -1,5 +1,7 @@
 package blurtic.haru.APISet.Weather.Class;
 
+import java.util.ArrayList;
+
 /**
  * Created by Kim W on 2016-06-13.
  */
@@ -50,6 +52,17 @@ public class CurrentTimeInfo {
         DateTimeMapping()
         동네예보 조회를 위해 BaseTime 매핑
       */
+    final int PTY = 1;
+    final int SKY = 5;
+    final int UUU = 10;
+    final int VVV = 11;
+
+
+    String categoryValue[] = {"POP","PTY","R06","REH","SO6","SKY","T3H","TMN","TMX","UUU","VVV","WAV","VEC","WSD"};
+    String categoryToHangeul[] = {"강수확률","강수형태","6시간 강수량","습도","6시간 신적설",
+            "하늘상태","3시간 기온","일 최저기온","일 최고기온","풍속(동서)","풍속(남북)","파고","풍향","풍속"};
+
+
 
     public String DateTimeMapping(String hour)
     {
@@ -62,25 +75,65 @@ public class CurrentTimeInfo {
         }
         return "";
     }
+    public String CodeMapping(String category,String code)
+    {
+        int idx;
+        String result = "";
+        for( idx = 0; idx < categoryValue.length; idx++)
+        {
+            if(categoryValue[idx].equals(category))
+                result = categoryToHangeul[idx];
+        }
+
+        switch(idx)
+        {
+            case PTY:
+                rainTypeMake(code);
+                break;
+            case SKY:
+                SkyMake(code);
+                break;
+            case UUU:
+                WindMake(code);
+                break;
+            case VVV :
+                WindMake(code);
+                break;
+
+            default:
+                result = result + " : " + code;
+                break;
+        }
+
+
+        return result;
+    }
 
     String SkyMake(String rawData){
-        String sky = "SKY";
         String skyCodeString[] = {"맑음","구름조금","구름많음","흐림"};
         int skyCode[] = {1,2,3,4};
-
+        for(int i = 0; i < skyCode.length; i++)
+        {
+            if(skyCode[i] == Integer.valueOf(rawData))
+                return skyCodeString[i];
+        }
         return "";
     }
 
-    String typeMake(String rawData)
+    String rainTypeMake(String rawData)
     {
-        String pty = "PTY";
+
         String ptyCodeString[] = {"없음","비","진눈개비","눈"};
         int ptyCode[] = {0,1,2,3};
-
+        for(int i = 0; i < ptyCode.length; i++)
+        {
+            if(ptyCode[i] == Integer.valueOf(rawData))
+                return ptyCodeString[i];
+        }
         return "";
     }
 
-    String RainWeightMake(String rawData)
+    String RainWeightMake(String rawData) // 걍 String.valueOf
     {
         String rain6 = "R06"; // 6시간 단위 강수량
         String rain1 = "RN1"; // 1시간 단위 강수량
@@ -96,9 +149,14 @@ public class CurrentTimeInfo {
 
     String LightMake(String rawData)
     {
+
         int lightCode[] = {0,1,2,3}; // 초 단기예보만 가능
         String lighCodeString[] = {"확률없음","낮음","보통","높음"};
-
+        for(int i = 0; i < lightCode.length; i++)
+        {
+            if(lightCode[i] == Integer.valueOf(rawData))
+                return lighCodeString[i];
+        }
         return "";
     }
 
@@ -112,34 +170,6 @@ public class CurrentTimeInfo {
         return "";
     }
 
-
-    String TempMake(String rawData)
-    {
-        String temparature[] = {"T3H","TMN","TMX"};
-        String tempResult[] = {"3시간 기온", "일 최저기온", "일 최고기온"};
-
-
-        // 3시간 온도, 최고온도 최저온도
-
-        return "";
-    }
-
-    String HumidityMake(String rawData)
-    {
-        String humi = "REH"; // 습도 확률
-        String humiResult = "습도";
-
-
-        return "";
-    }
-
-
-    String RainPercentMake(String rawData)
-    {
-        String rainPercent = "POP"; // 강수 확률
-        String rainResult = "강수확률";
-        return "";
-    }
 
 
     String LocationXYReturn(double lat,double lon)
