@@ -5,6 +5,9 @@ import java.util.ArrayList;
 /**
  * Created by Kim W on 2016-06-13.
  */
+// 매핑 , 현재시간을 받아서, basetime에 근접한 시간으로 매핑 이상은 X
+//
+
 public class CurrentTimeInfo {
     String for_token[] = {
             "baseDate",
@@ -41,8 +44,8 @@ public class CurrentTimeInfo {
     // msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date=20160613&base_time=1730&nx=55&ny=127&numOfRows=100
 
     // getForecastSpaceDataRequest 를 위한 base Tiem
-    String base_Time[] = {"0200","0500","0800","1100","1400",
-    "1700","2000","2300"};
+    String base_Time[] = {"02","05","08","11","14",
+    "17","20","23"};
     //API값이 초기화 되는 시간
     //http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?ServiceKey
     // =msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date=20160613&base_time=1700&nx=55&ny=127&numOfRows=300
@@ -67,7 +70,7 @@ public class CurrentTimeInfo {
     public String DateTimeMapping(String hour)
     {
         int it_hour = Integer.valueOf(hour);
-        for(int i = base_Time.length ; i >= 0; i--)
+        for(int i = base_Time.length - 1 ; i >= 0; i--)
         {
             int data = Integer.valueOf(base_Time[i]);
             if(it_hour > data) return String.valueOf(data);
