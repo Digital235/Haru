@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
                 ImageButton bt = (ImageButton) v;
                 if(layout_TodayDetail.getVisibility()==View.VISIBLE)
                 {
-                    bt.setImageResource(android.R.drawable.arrow_up_float);
+                    bt.setImageResource(android.R.drawable.arrow_down_float);
                     layout_TodayDetail.setVisibility(View.GONE);
                 }
                 else
                 {
-                    bt.setImageResource(android.R.drawable.arrow_down_float);
+                    bt.setImageResource(android.R.drawable.arrow_up_float);
                     layout_TodayDetail.setVisibility(View.VISIBLE);
                 }
             }
@@ -49,18 +49,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static String[] dataObjects = new String[]{
-            "Text #1",
-            "Text #2",
-            "Text #3",
-            "Text android",
-            "Text connnect",
-            "Text #3",
-            "Text android",
-            "Text connnect",
-            "Text #3",
-            "Text android",
-            "Text connnect",
-            "www.androidconnect.org"};
+            "시간별 날씨",
+            "시간별 날씨2",
+            "시간별 날씨3",
+            "시간별 날씨4",
+            "시간별 날씨5",
+            "시간별 날씨6",
+            "시간별 날씨7",
+            "시간별 날씨8",
+            "시간별 날씨9",
+            "시간별 날씨10"};
 
     private class  HAdapter extends BaseAdapter {
 

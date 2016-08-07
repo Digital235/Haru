@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="blurtic.haru.MainActivity">
+    tools:context="blurtic.haru.MainActivity"
+    android:background="@mipmap/rainwallpaper2"
+    android:padding="0dp">
 
 
     <LinearLayout
@@ -18,26 +20,31 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:id="@+id/layout_top_label">
+            android:id="@+id/layout_top_label"
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="날짜"
+                android:text="2016년 8월 8일"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/txt_date" />
+                android:id="@+id/txt_date"
+                android:textSize="50dp"
+                android:textColor="#ffffff" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/imgbtn_menu"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_menu_sort_by_size" />
+                android:src="@mipmap/menuicon"
+                android:scaleType="fitCenter"
+                android:background="#00ffffff" />
         </RelativeLayout>
 
         <LinearLayout
@@ -46,28 +53,35 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:id="@+id/layout_today_weather">
+            android:id="@+id/layout_today_weather"
+            android:padding="16dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/img_todayweather"
-                android:src="@android:drawable/star_big_off"
+                android:src="@mipmap/rainicon"
                 android:layout_marginRight="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="날씨요약"
-                android:id="@+id/txt_todaysummery" />
+                android:text="오늘의 최저기온 : 28℃\n오늘의 최대기온 : 35℃"
+                android:id="@+id/txt_todaysummery"
+                android:textColor="#ffffff"
+                android:textSize="30dp" />
         </LinearLayout>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
             android:id="@+id/imgbtn_detail"
             android:layout_gravity="right"
-            android:src="@android:drawable/arrow_down_float" />
+            android:src="@mipmap/detailarrow"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#00ffffff" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -79,17 +93,19 @@
             <org.androidconnect.listview.horizontal.adapter.HorizontalListView
                 android:id="@+id/listview_timeweather"
                 android:layout_width="match_parent"
-                android:layout_height="150dip"
+                android:layout_height="200dp"
                 android:background="#00000000"
                 android:layout_gravity="center" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="asdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\nasdfasdf\n"
+                android:text="날씨 상세정보 영역\n내용\n내용\n내용\n내용"
                 android:id="@+id/txt_todayweather_detail"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textSize="30dp"
+                android:textColor="#ffffff" />
 
         </LinearLayout>
 
@@ -97,7 +113,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="오늘의 추천"
-            android:id="@+id/label_today_recommend" />
+            android:id="@+id/label_today_recommend"
+            android:textColor="#ffffff"
+            android:textSize="40dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:id="@+id/imgbtn_todaymusic"
+            android:src="@mipmap/music"
+            android:scaleType="centerCrop"
+            android:padding="0dp"
+            android:layout_margin="0dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:id="@+id/imgbtn_todaymovie"
+            android:src="@mipmap/movie"
+            android:scaleType="centerCrop" />
 
     </LinearLayout>
 </ScrollView>
