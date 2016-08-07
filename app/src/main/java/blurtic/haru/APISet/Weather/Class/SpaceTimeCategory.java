@@ -4,6 +4,11 @@ package blurtic.haru.APISet.Weather.Class;
  * Created by Kim W on 2016-08-06.
  */
 public class SpaceTimeCategory {
+    public String key_category;
+    public String key_fcstDate;
+    public String key_fcstTime;
+    public String key_fcstValue;
+
     public String category;
     public String fcstDate;
     public String fcstTime;
@@ -19,6 +24,9 @@ public class SpaceTimeCategory {
         this.nx = nx;
         this.ny = ny;
     }
+
+
+
     public void InsideValue(String val)
     {
         switch(val)

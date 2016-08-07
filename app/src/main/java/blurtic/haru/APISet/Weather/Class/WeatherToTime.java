@@ -4,21 +4,76 @@ package blurtic.haru.APISet.Weather.Class;
  * Created by Kim W on 2016-06-13.
  */
 public class WeatherToTime {
-    String date = "";
-    String type = "";
-    String rain6_Percent = "";
-    String rain1_Percent = "";
-    String rain_Weight = "";
+    public String date = "";
+    public String type = "";
+    public String rain6_Percent = "";
+    public String rain1_Percent = "";
+    public String rain_Weight = "";
 
-    String snow6_Percent = "";
-    String lightPercent ="";
-    String wind_Direction = "";
-    String temp3_Current = "";
-    String temp_Min = "";
-    String temp_Max = "";
+    public String snow6_Percent = "";
+    public String lightPercent ="";
+    public  String wind_Direction = "";
+    public String temp3_Current = "";
+    public String temp_Min = "";
+    public String temp_Max = "";
 
-    String humi = "";
-    String skyType = "";
+    public String humi = "";
+    public String skyType = "";
+    String categoryValue[] = {"POP","PTY","R06","REH","SO6","SKY","T3H","TMN","TMX","UUU","VVV","WAV","VEC","WSD"};
+
+    //각 코드에 매핑
+    // 한글로 변환은 currentTimeInfo에 기술
+    public void HashValue(String category,String val)
+    {
+        switch(category)
+        {
+            case "POP":
+
+                break;
+            case "PTY":
+
+                break;
+            case "R06":
+
+                break;
+            case "REH":
+
+                break;
+            case "SO6":
+
+                break;
+            case "SKY":
+
+                break;
+            case "TMN":
+
+                break;
+            case "TMX":
+
+                break;
+            case "UUU":
+
+                break;
+            case "VVV":
+
+                break;
+            case "WAV":
+
+                break;
+            case "VEC":
+
+                break;
+            case "WSD":
+
+                break;
+        }
+
+
+    }
+
+
+
+
 
     public void setDate(String date) {
         this.date = date;

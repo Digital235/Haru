@@ -339,7 +339,7 @@ public class URLConnectionManager extends Thread{
         x
         y
      */
-    ContentValues RequestURL_CurrentTimeInfo(String urlData)
+    ArrayList<SpaceTimeCategory> RequestURL_CurrentTimeInfo(String urlData)
     {
 
         CurrentTimeInfo mInfo = new CurrentTimeInfo();
@@ -389,7 +389,9 @@ public class URLConnectionManager extends Thread{
                         }
 
                         parserEvent = parser.next();
-                        if(parser.getName().contains("item") && parserEvent == XmlPullParser.END_TAG) break;
+                        if(parser.getName() == null) continue;
+
+                        if(parser.getName().equals("item") && parserEvent == XmlPullParser.END_TAG ) break;
                     }
                     mSpaceTime.add(mVal);
                 }
@@ -403,7 +405,7 @@ public class URLConnectionManager extends Thread{
         }catch(IOException e){
             e.printStackTrace();
         }
-        return mContent;
+        return mSpaceTime;
     }
 
 
@@ -479,6 +481,52 @@ public class URLConnectionManager extends Thread{
 
     }
 
+    /*
+
+        fcstDate를 통해서, +0 , +1 , +2 , +3 을 통해 값을 찾아내야할듯
+        // category 통해서 fcstValue값을 배정
+
+     */
+
+    public ArrayList<WeatherToTime> ContentToTimeArrayList(ArrayList<SpaceTimeCategory> mTime)
+    {
+        ArrayList<WeatherToTime> mData = new ArrayList<>();
+        WeatherToTime tdata1 = new WeatherToTime();
+        WeatherToTime tdata2 = new WeatherToTime();
+        WeatherToTime tdata3 = new WeatherToTime();
+        WeatherToTime tdata4 = new WeatherToTime();
+        String cur_date = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) +
+                            mCurrentTimeAndDay.get(DAY);
+         String st_date1 = ""; // + 0 일
+         String st_date2 = ""; // + 1 일
+         String st_date3 = ""; // + 2 일
+        for(int i = 0 ; i < mTime.size(); i++)
+        {
+            if(st_date1.equals(mTime.get(i).fcstDate))
+            {
+
+            }else if(st_date2.equals(mTime.get(i).fcstDate))
+            {
+
+            }else if(st_date3.equals(mTime.get(i).fcstDate))
+            {
+
+            }else{
+
+            }
+
+
+
+
+
+        }
+
+
+
+
+        return mData;
+    }
+
     public void ContentToMiddleArrayList(ContentValues mWeather, ContentValues mTemp)
     {
         String keyName = "ta";
@@ -548,8 +596,8 @@ public class URLConnectionManager extends Thread{
 
         mTimeWeather = new ArrayList<>();
         spaceData = makeSpaceDataURL(inputLocation);
-        ContentValues mTime = RequestURL_CurrentTimeInfo(spaceData);
-
+        ArrayList<SpaceTimeCategory> mTime = RequestURL_CurrentTimeInfo(spaceData);
+        mTimeWeather = ContentToTimeArrayList(mTime);
 
         /*
             Total Data에 단기, 중기 데이터 넣음

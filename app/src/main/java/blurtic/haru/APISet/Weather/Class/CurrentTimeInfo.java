@@ -78,7 +78,7 @@ public class CurrentTimeInfo {
         }
         return "";
     }
-    public String CodeMapping(String category,String code)
+    public String CodeMapping(String category,String code) // code가 value
     {
         int idx;
         String result = "";
