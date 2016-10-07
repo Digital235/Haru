@@ -4,11 +4,10 @@
   android:orientation="vertical"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
-  android:background="#00000000"
-  >
+  android:background="#00000000">
 	<TextView
 		android:id="@+id/txt_timeweather_date"
-		android:layout_width="match_parent"
+		android:layout_width="120dp"
 		android:layout_height="wrap_content"
 		android:textColor="#ffffff"
 		android:gravity="center_horizontal"
@@ -31,7 +30,7 @@
 
   	<TextView
   	android:id="@+id/txt_timeweather_temp"
-  	android:layout_width="match_parent"
+  	android:layout_width="120dp"
   	android:layout_height="wrap_content"
   	android:textColor="#ffffff"
   	android:text="text2"
@@ -39,5 +38,6 @@
 		android:background="#00000000"
 		android:textSize="20dp"
 		android:layout_gravity="center_horizontal" />
+
   
 </LinearLayout>
