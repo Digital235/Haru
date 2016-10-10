@@ -3,6 +3,7 @@ package blurtic.haru;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-
+    int currentWeather;
     ArrayList<TimeWeatherItem> timeWeatherItemList = new ArrayList<TimeWeatherItem>();
     ImageView todayWeatherIcon;
     TextView todaySummery;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +102,12 @@ public class MainActivity extends AppCompatActivity {
                 colorAnim.setDuration(300);
                 colorAnim.setEvaluator(new ArgbEvaluator());
                 colorAnim.start();
-                Toast.makeText(MainActivity.this, "movie", Toast.LENGTH_SHORT).show();
+
+                //Toast.makeText(MainActivity.this, "movie", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this,RecommandMovieActivity.class);
+                intent.putExtra("weather", currentWeather);
+                startActivity(intent);
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
             }
         });
 
@@ -122,6 +129,9 @@ public class MainActivity extends AppCompatActivity {
         todayDate.setText(df.format(c.getTime()));
 
         setTodaySummery(10,20);
+
+        currentWeather=0;
+        setWeatherImage(todayWeatherIcon,currentWeather);
 
         timeWeatherItemList.add(new TimeWeatherItem(0, 1, 2));
         timeWeatherItemList.add(new TimeWeatherItem(3, 2, 3));
@@ -189,9 +199,9 @@ public class MainActivity extends AppCompatActivity {
             TextView title = (TextView) retval.findViewById(R.id.txt_timeweather_date);
             TextView temp = (TextView) retval.findViewById(R.id.txt_timeweather_temp);
             ImageView image = (ImageView) retval.findViewById(R.id.img_timeweather_img);
-            temp.setText(""+timeWeatherItemList.get(position).time);
+            temp.setText(""+timeWeatherItemList.get(position).time+"℃");
             setWeatherImage(image, timeWeatherItemList.get(position).weather);
-            title.setText(""+timeWeatherItemList.get(position).temp);
+            title.setText(""+timeWeatherItemList.get(position).temp+"시");
 
             return retval;
         }
