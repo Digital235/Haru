@@ -10,7 +10,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="80dp"
         android:gravity="center_vertical"
         android:id="@+id/layout_movieinfo">
 
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="genre"
             android:id="@+id/txt_moviegenre"
-            android:textSize="30dp"
+            android:textSize="18sp"
             android:textColor="#ffffff" />
 
         <TextView
@@ -27,19 +27,20 @@
             android:layout_height="wrap_content"
             android:text="title"
             android:id="@+id/txt_movietitle"
-            android:textSize="45dp"
-            android:textColor="#ffffff" />
+            android:textSize="30sp"
+            android:textColor="#ffffff"
+            android:textIsSelectable="true" />
 
     </LinearLayout>
 
     <FrameLayout
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center_vertical|right">
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/bt_like"
             android:layout_gravity="center"
             android:src="@drawable/ic_heart1" />
