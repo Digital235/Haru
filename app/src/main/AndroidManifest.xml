@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".APISet.TestActivity" />
-        <activity android:name=".RecommandMovieActivity"></activity>
+        <activity android:name=".RecommendMovieActivity" />
+        <activity android:name=".RecommendMusicActivity" />
+        <activity android:name=".PlanActivity"></activity>
     </application>
 
 </manifest>

@@ -6,7 +6,9 @@ import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class RecommandMovieActivity extends AppCompatActivity {
+public class RecommendMovieActivity extends AppCompatActivity {
     ViewGroup layout;
     ImageView weatherIcon;
     TextView weatherMessage;
@@ -33,6 +35,12 @@ public class RecommandMovieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommand_movie);
 
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+
         weatherIcon = (ImageView)findViewById(R.id.img_movieweather);
         weatherMessage = (TextView)findViewById(R.id.txt_movieweather);
         layout = (ViewGroup)findViewById(R.id.root_layout);
@@ -43,6 +51,7 @@ public class RecommandMovieActivity extends AppCompatActivity {
         currentWeather = intent.getExtras().getInt("weather");
         setWeather(currentWeather);
 
+        MovieItem.globalNumber=0;
         movieArray.add(new MovieItem("aa","bb","http://m.naver.com"));
         movieArray.add(new MovieItem("cc","ff","http://m.daum.net"));
         movieArray.add(new MovieItem("dd","aa","dd"));
@@ -55,24 +64,27 @@ public class RecommandMovieActivity extends AppCompatActivity {
     }
 
     void addRow(MovieItem mov){
-        View item = LayoutInflater.from(this).inflate(R.layout.recommendmovie_listitem, null);
-        TextView titleView = (TextView) item.findViewById(R.id.txt_movietitle);
-        TextView genreView = (TextView) item.findViewById(R.id.txt_moviegenre);
+        View item = LayoutInflater.from(this).inflate(R.layout.recommend_listitem, null);
+        TextView titleView = (TextView) item.findViewById(R.id.txt_recommendinfo2);
+        TextView genreView = (TextView) item.findViewById(R.id.txt_recommendinfo1);
         titleView.setText(mov.genre);
         genreView.setText(mov.title);
         final String url=mov.url;
         final int movNumber=mov.number;
 
-        LinearLayout info = (LinearLayout) item.findViewById(R.id.layout_movieinfo);
+        final LinearLayout info = (LinearLayout) item.findViewById(R.id.layout_recommendinfo);
         info.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ValueAnimator colorAnim = ObjectAnimator.ofInt(v, "backgroundColor", Color.WHITE, Color.parseColor("#c8000000"));
+                ColorDrawable viewColor = (ColorDrawable) info.getBackground();
+                int colorId = viewColor.getColor();
+
+                ValueAnimator colorAnim = ObjectAnimator.ofInt(v, "backgroundColor", Color.WHITE, colorId);
                 colorAnim.setDuration(300);
                 colorAnim.setEvaluator(new ArgbEvaluator());
                 colorAnim.start();
 
-                AlertDialog.Builder ab = new AlertDialog.Builder(RecommandMovieActivity.this);
-                final WebView webView = new WebView(RecommandMovieActivity.this);
+                AlertDialog.Builder ab = new AlertDialog.Builder(RecommendMovieActivity.this);
+                final WebView webView = new WebView(RecommendMovieActivity.this);
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -101,11 +113,11 @@ public class RecommandMovieActivity extends AppCompatActivity {
                 if (movieArray.get(number).favorite) {
                     movieArray.get(number).favorite = false;
                     button.setImageResource(R.drawable.ic_heart1);
-                    Toast.makeText(RecommandMovieActivity.this, "해당 영화에 '좋아요'를 해제하였습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RecommendMovieActivity.this, "해당 영화에 '좋아요'를 해제하였습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     movieArray.get(number).favorite = true;
                     button.setImageResource(R.drawable.ic_heart2);
-                    Toast.makeText(RecommandMovieActivity.this, "해당 영화에 '좋아요'를 설정하였습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RecommendMovieActivity.this, "해당 영화에 '좋아요'를 설정하였습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

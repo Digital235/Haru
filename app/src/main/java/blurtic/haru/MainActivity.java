@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(blurtic.haru.R.layout.activity_main);
 
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+
         ImageButton bt_Detail = (ImageButton)findViewById(R.id.imgbtn_detail);
         todayWeatherIcon = (ImageView)findViewById(R.id.img_todayweather);
         todaySummery = (TextView)findViewById(R.id.txt_todaysummery);
@@ -63,8 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "menu1", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "menu1", Toast.LENGTH_SHORT).show();
                 materialDesignFAM.close(true);
+
+                Intent intent=new Intent(MainActivity.this,PlanActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 colorAnim.start();
 
                 //Toast.makeText(MainActivity.this, "movie", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(MainActivity.this,RecommandMovieActivity.class);
+                Intent intent=new Intent(MainActivity.this,RecommendMovieActivity.class);
                 intent.putExtra("weather", currentWeather);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
@@ -117,7 +128,12 @@ public class MainActivity extends AppCompatActivity {
                 colorAnim.setDuration(300);
                 colorAnim.setEvaluator(new ArgbEvaluator());
                 colorAnim.start();
-                Toast.makeText(MainActivity.this, "music", Toast.LENGTH_SHORT).show();
+
+                // Toast.makeText(MainActivity.this, "music", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this,RecommendMusicActivity.class);
+                intent.putExtra("weather", currentWeather);
+                startActivity(intent);
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
             }
         });
 

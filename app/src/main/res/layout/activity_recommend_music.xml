@@ -7,14 +7,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".RecommendMovieActivity"
+    tools:context=".RecommendMusicActivity"
     android:background="#000000">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imageView2"
-        android:src="@drawable/bg6"
+        android:src="@drawable/bg4"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -26,7 +26,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="오늘의 영화"
+        android:text="오늘의 음악"
         android:id="@+id/textView3"
         android:textColor="#ffffff"
         android:textSize="30sp"
@@ -38,7 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#ffffff"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -50,7 +52,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="40dp"
-            android:id="@+id/img_movieweather"
+            android:id="@+id/img_musicweather"
             android:layout_marginRight="15dp"
             android:src="@mipmap/icon_sun" />
 
@@ -60,7 +62,7 @@
             android:text="오늘의날씨는~~"
             android:textSize="14sp"
             android:textColor="#ffffff"
-            android:id="@+id/txt_movieweather"
+            android:id="@+id/txt_musicweather"
             android:visibility="visible" />
 
     </LinearLayout>
@@ -72,3 +74,4 @@
     </LinearLayout>
 
 </FrameLayout>
+
