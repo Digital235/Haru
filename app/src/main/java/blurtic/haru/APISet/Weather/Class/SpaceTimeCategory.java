@@ -26,10 +26,10 @@ public class SpaceTimeCategory {
     }
 
 
-
-    public void InsideValue(String val)
+    // 카테고리 text와 value 섞음
+    public void InsideValue(String name,String val)
     {
-        switch(val)
+        switch(name)
         {
             case "category":
                 this.category = val;

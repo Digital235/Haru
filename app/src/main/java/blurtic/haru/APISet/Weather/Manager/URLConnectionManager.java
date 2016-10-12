@@ -374,11 +374,17 @@ public class URLConnectionManager extends Thread{
                     for( ; ; ) {
 
                         for (int i = 0; i < category.length; i++) {
-                            if (parser.getName().equals(category[i])) { // Parser 네임
+                            String parser_test = parser.getName();
+                            if(parser_test == null) {
+                                i = 0;
+                                parserEvent = parser.next();
+                                parser_test = parser.getName();
+                            }
+                            if (parser_test.equals(category[i])) { // Parser 네임
 
                                 String name = parser.getName();
                                 String value = parser.nextText();
-                                mVal.InsideValue(value);
+                                mVal.InsideValue(name,value);
                                 tagName = parser.getName();
                                 mTemp.add(name);
                                 mTemp.add(value);
@@ -485,46 +491,45 @@ public class URLConnectionManager extends Thread{
 
         fcstDate를 통해서, +0 , +1 , +2 , +3 을 통해 값을 찾아내야할듯
         // category 통해서 fcstValue값을 배정
-
+        //시간 / 온도만 뽑아내면됨
      */
 
     public ArrayList<WeatherToTime> ContentToTimeArrayList(ArrayList<SpaceTimeCategory> mTime)
     {
-        ArrayList<WeatherToTime> mData = new ArrayList<>();
-        WeatherToTime tdata1 = new WeatherToTime();
-        WeatherToTime tdata2 = new WeatherToTime();
-        WeatherToTime tdata3 = new WeatherToTime();
-        WeatherToTime tdata4 = new WeatherToTime();
+        ArrayList<WeatherToTime> time_data = new ArrayList<>();
+
         String cur_date = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) +
-                            mCurrentTimeAndDay.get(DAY);
-         String st_date1 = ""; // + 0 일
-         String st_date2 = ""; // + 1 일
-         String st_date3 = ""; // + 2 일
+                (mCurrentTimeAndDay.get(DAY));
+         String st_date1 = cur_date; // + 0 일
+
+        //String test_data = "20161012";
         for(int i = 0 ; i < mTime.size(); i++)
         {
-            if(st_date1.equals(mTime.get(i).fcstDate))
-            {
+            //내부적 루프 돌아서 다넣는 식,
 
-            }else if(st_date2.equals(mTime.get(i).fcstDate))
+            WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
+            //if(st_date1.equals(mTime.get(i).fcstDate))
+            if(st_date1.equals(mTime.get(i).fcstDate) && i != 0)
             {
-
-            }else if(st_date3.equals(mTime.get(i).fcstDate))
-            {
-
-            }else{
+                for(int j = i; j < mTime.size(); i++,j++)
+                {
+                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
+                    {
+                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                    }
+                    if(mTemp.isFullAllData()) break;
+                }
 
             }
-
-
-
-
-
+                mTemp.ChangeMapping();
+                time_data.add(mTemp);
         }
 
 
+        //한 날씨에 대한 정보가 아닌,
 
 
-        return mData;
+        return time_data;
     }
 
     public void ContentToMiddleArrayList(ContentValues mWeather, ContentValues mTemp)
@@ -604,7 +609,7 @@ public class URLConnectionManager extends Thread{
 
          */
         ContentToMiddleArrayList(mVal,mVal2);
-        mTotalWeather = new WeatherData(mDayWeather,null);
+        mTotalWeather = new WeatherData(mDayWeather,mTimeWeather);
         //this.mHandler = mHandler;
 //        Message msg =l
 

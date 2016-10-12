@@ -6,3 +6,12 @@
 .DS_Store
 /build
 /captures
+
+*.apk
+*.ap_
+bin/
+gen/
+Thumbs.db
+.classpath
+.project
+.idea/

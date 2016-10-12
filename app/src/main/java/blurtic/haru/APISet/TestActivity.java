@@ -9,10 +9,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import blurtic.haru.APISet.Weather.Class.WeatherData;
+import blurtic.haru.APISet.Weather.Class.WeatherToTime;
 import blurtic.haru.R;
 import blurtic.haru.APISet.Weather.Manager.URLConnectionManager;
 import blurtic.haru.APISet.Weather.Message.HandlerMessage;
@@ -26,20 +30,38 @@ import blurtic.haru.APISet.Weather.Message.HandlerMessage;
 
 
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity implements View.OnClickListener {
     Button btn_totalRead;
     Button btn_timeRead;
 
     TextView tv_totalRead;
     TestActivity mMain;
     ProgressDialog dialog;
+    URLConnectionManager mManager;
     public void OnInit() {
         btn_totalRead = (Button)findViewById(R.id.btn_totalRead);
         btn_timeRead = (Button)findViewById(R.id.btn_timeRead);
+        btn_timeRead.setOnClickListener(this);
+        btn_totalRead.setOnClickListener(this);
         tv_totalRead = (TextView)findViewById(R.id.tv_readPrint);
         mMain = this;
-
+        mManager = new URLConnectionManager(this.getApplicationContext(),"",mMain);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.btn_totalRead:
+                mManager.run();
+                break;
+            case R.id.btn_timeRead:
+                mManager.run();
+                break;
+
+        }
+    }
+
     //
 //    dialog = ProgressDialog.show(this, "",
 //            "Loading", true);
@@ -50,9 +72,11 @@ public class TestActivity extends AppCompatActivity {
 
 
         OnInit();
-        URLConnectionManager mManage = new URLConnectionManager(this.getApplicationContext(),"구미시",mMain);
-        mManage.run();
+//        URLConnectionManager mManage = new URLConnectionManager(this.getApplicationContext(),"구미시",mMain);
+//        mManage.run();
     }
+
+
     public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -60,6 +84,7 @@ public class TestActivity extends AppCompatActivity {
             switch (msg.what) {
                 case HandlerMessage.THREAD_HANDLER_MIDDLELAND_SUCCESS_INFO:
                     WeatherData mTotal = (WeatherData)msg.obj;
+                    ArrayList<WeatherToTime> mTime = mTotal.mTimeWeather; // 이놈 쓰면댐
                     String data = "";
                     for(int i = 0; i < mTotal.mDayWeather.size(); i++)
                     {

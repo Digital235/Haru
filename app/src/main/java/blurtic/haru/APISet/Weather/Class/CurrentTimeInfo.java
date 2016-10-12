@@ -55,6 +55,7 @@ public class CurrentTimeInfo {
         DateTimeMapping()
         동네예보 조회를 위해 BaseTime 매핑
       */
+    // 어떤 형식으로 넘어오는지 판단 필요
     final int PTY = 1;
     final int SKY = 5;
     final int UUU = 10;
@@ -78,6 +79,7 @@ public class CurrentTimeInfo {
         }
         return "";
     }
+    //category = pop / pty etc..
     public String CodeMapping(String category,String code) // code가 value
     {
         int idx;
@@ -90,17 +92,17 @@ public class CurrentTimeInfo {
 
         switch(idx)
         {
-            case PTY:
-                rainTypeMake(code);
+            case PTY: // 강수 형태
+                result = result + " : " + rainTypeMake(code);
                 break;
-            case SKY:
-                SkyMake(code);
+            case SKY: // 하늘 상태
+                result = result + " : " + SkyMake(code);
                 break;
             case UUU:
-                WindMake(code);
+                result = result + " : " +WindMake(code);
                 break;
             case VVV :
-                WindMake(code);
+                result = result + " : " + WindMake(code);
                 break;
 
             default:
