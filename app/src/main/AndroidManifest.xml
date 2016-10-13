@@ -23,6 +23,8 @@
         <activity android:name=".RecommendMusicActivity" />
         <activity android:name=".PlanActivity" />
         <activity android:name=".DiaryActivity"></activity>
+        <activity android:name=".DiaryWriteActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

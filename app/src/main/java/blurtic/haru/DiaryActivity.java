@@ -1,6 +1,7 @@
 package blurtic.haru;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -27,6 +28,7 @@ import java.util.Locale;
 public class DiaryActivity extends AppCompatActivity {
 
     private TextView tvDate;
+    private ImageView writeButton;
     private ImageView prevMonthBtn;
     private ImageView nextMonthBtn;
     private GridAdapter gridAdapter;
@@ -47,10 +49,28 @@ public class DiaryActivity extends AppCompatActivity {
         }
 
         tvDate = (TextView)findViewById(R.id.tv_date);
+        writeButton = (ImageView)findViewById(R.id.bt_write);
         gridView = (GridView)findViewById(R.id.gridview);
         prevMonthBtn = (ImageView)findViewById(R.id.btn_prevMonth);
         nextMonthBtn = (ImageView)findViewById(R.id.btn_nextMonth);
         todayCal = Calendar.getInstance();
+
+        writeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
+                SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
+                SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                String dateString = curYearFormat.format(date)+ curMonthFormat.format(date)+ curDayFormat.format(date);
+
+                Intent intent=new Intent(DiaryActivity.this, DiaryWriteActivity.class);
+                intent.putExtra("date", dateString);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+        });
 
         prevMonthBtn.setOnClickListener(new View.OnClickListener() {
             @Override
