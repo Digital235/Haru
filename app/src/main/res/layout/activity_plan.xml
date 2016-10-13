@@ -9,10 +9,47 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="blurtic.haru.PlanActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/btn_planWrite"
+        android:src="@drawable/bg5"
+        android:scaleType="centerCrop"
+        android:background="#000000" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To Do List"
+                android:id="@+id/textView3"
+                android:textColor="#ffffff"
+                android:textSize="30sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="25dp" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageView3"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="25dp"
+                android:src="@drawable/ic_write" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffffff"
+            android:layout_marginTop="5dp" />
 
         <com.baoyz.swipemenulistview.SwipeMenuListView
             android:id="@+id/planListView"

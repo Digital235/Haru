@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:background="#50000000"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:id="@+id/layout_background">
 
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:id="@+id/img_check"
-        android:layout_marginRight="15sp"
+        android:layout_marginRight="15dp"
         android:src="@drawable/ic_check1" />
 
     <LinearLayout
@@ -26,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/txt_time"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textColor="#ffffff" />
 
         <TextView
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/txt_name"
-            android:textSize="25sp"
+            android:textSize="23sp"
             android:textColor="#ffffff" />
     </LinearLayout>
 </LinearLayout>

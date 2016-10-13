@@ -52,11 +52,11 @@ public class RecommendMovieActivity extends AppCompatActivity {
         setWeather(currentWeather);
 
         MovieItem.globalNumber=0;
-        movieArray.add(new MovieItem("aa","bb","http://m.naver.com"));
-        movieArray.add(new MovieItem("cc","ff","http://m.daum.net"));
-        movieArray.add(new MovieItem("dd","aa","dd"));
-        movieArray.add(new MovieItem("aa","bb","http://m.naver.com"));
-        movieArray.add(new MovieItem("cc","ff","http://m.daum.net"));
+        for(int i=0; i<MovieDatabase.items.length; i++){
+            if(MovieDatabase.items[i]!=null) {
+                movieArray.add(MovieDatabase.items[i]);
+            }
+        }
 
         for(int i=0; i<movieArray.size(); i++){
             addRow(movieArray.get(i));
@@ -67,8 +67,8 @@ public class RecommendMovieActivity extends AppCompatActivity {
         View item = LayoutInflater.from(this).inflate(R.layout.recommend_listitem, null);
         TextView titleView = (TextView) item.findViewById(R.id.txt_recommendinfo2);
         TextView genreView = (TextView) item.findViewById(R.id.txt_recommendinfo1);
-        titleView.setText(mov.genre);
-        genreView.setText(mov.title);
+        titleView.setText(mov.title);
+        genreView.setText(mov.genre);
         final String url=mov.url;
         final int movNumber=mov.number;
 
@@ -162,5 +162,21 @@ class MovieItem{
         url=u;
         favorite=false;
         globalNumber++;
+    }
+}
+
+class MovieDatabase{
+    public static MovieItem[] items = new MovieItem[10];
+    static{
+        items[0]=new MovieItem("판타지, 미스터리","미스 페레그린과 이상한 아이들의 집","http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=129383");
+        items[1]=new MovieItem("공포, 스릴러","맨 인 더 다크","http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=144944");
+        items[2]=new MovieItem("범죄, 액션","아수라","http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=44913");
+        items[3]=new MovieItem("코미디, 멜로", "브리짓 존스의 베이비", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=143456");
+        items[4]=new MovieItem("드라마", "설리: 허드슨강의 기적", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=143495");
+        items[5]=new MovieItem("액션", "밀정", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=137952");
+        items[6]=new MovieItem("드라마", "그물", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=149174");
+        items[7]=new MovieItem("모험, 판타지", "피터와 드래곤", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=134847");
+        items[8]=new MovieItem("드라마", "죽여주는 여자", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=146508");
+        items[9]=new MovieItem("애니메이션, 모험", "바다 탐험대 옥토넛 시즌4: 늪지탐험선K", "http://m.movie.naver.com/movie/bi/mi/basic.nhn?code=149505");
     }
 }

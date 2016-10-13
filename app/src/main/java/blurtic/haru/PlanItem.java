@@ -3,7 +3,7 @@ package blurtic.haru;
 /**
  * Created by DCB on 2016-10-11.
  */
-public class PlanItem {
+public class PlanItem implements Comparable<PlanItem>{
     int hour;
     int minute;
     int completeHour;
@@ -20,8 +20,8 @@ public class PlanItem {
     public PlanItem(int h, int m, int ch, int cm, String n){
         hour=h;
         minute=m;
-        completeMinute=ch;
-        completeHour=cm;
+        completeHour=ch;
+        completeMinute=cm;
         name=n;
     }
     public void modify(int h, int m, String n){
@@ -49,5 +49,16 @@ public class PlanItem {
     public int getCompleteMinute(){return completeMinute;}
     public String getName(){
         return name;
+    }
+
+    @Override
+    public int compareTo(PlanItem another) {
+        if(hour>another.hour)return 1;
+        else if(hour<another.hour)return -1;
+
+        if(minute>another.minute)return 1;
+        else if(minute<another.minute)return -1;
+
+        return name.compareTo(another.name);
     }
 }

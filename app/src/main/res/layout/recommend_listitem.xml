@@ -2,49 +2,59 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:clickable="true">
+    android:clickable="true"
+    android:background="#3c000000">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:gravity="center_vertical"
-        android:id="@+id/layout_recommendinfo"
-        android:background="#50000000"
-        android:paddingLeft="10dp">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="genre"
-            android:id="@+id/txt_recommendinfo1"
-            android:textSize="13sp"
-            android:textColor="#ffffff" />
+            android:layout_height="70dp"
+            android:gravity="center_vertical"
+            android:id="@+id/layout_recommendinfo"
+            android:background="#00ffffff"
+            android:paddingLeft="10dp"
+            android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="title"
-            android:id="@+id/txt_recommendinfo2"
-            android:textSize="23sp"
-            android:textColor="#ffffff"
-            android:textIsSelectable="true" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="genre"
+                android:id="@+id/txt_recommendinfo1"
+                android:textSize="13sp"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="title"
+                android:id="@+id/txt_recommendinfo2"
+                android:textSize="21sp"
+                android:textColor="#ffffff"
+                android:textIsSelectable="false"
+                android:layout_marginLeft="20dp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="20dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/bt_like"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_heart1" />
+        </FrameLayout>
 
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center_vertical|right">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/bt_like"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_heart1" />
-    </FrameLayout>
 
 </FrameLayout>

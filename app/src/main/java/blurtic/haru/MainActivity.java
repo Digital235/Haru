@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Toast.makeText(MainActivity.this, "menu1", Toast.LENGTH_SHORT).show();
-                materialDesignFAM.close(true);
+                materialDesignFAM.close(false);
 
                 Intent intent=new Intent(MainActivity.this,PlanActivity.class);
                 startActivity(intent);
@@ -81,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "menu2", Toast.LENGTH_SHORT).show();
-                materialDesignFAM.close(true);
+                materialDesignFAM.close(false);
             }
         });
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "menu3", Toast.LENGTH_SHORT).show();
-                materialDesignFAM.close(true);
+                materialDesignFAM.close(false);
             }
         });
 

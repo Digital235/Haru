@@ -19,7 +19,7 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/root_layout"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -69,6 +69,18 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#ffffff" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView2" >
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/root_layout"></LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </FrameLayout>
