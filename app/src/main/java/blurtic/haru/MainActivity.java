@@ -80,8 +80,12 @@ public class MainActivity extends AppCompatActivity {
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "menu2", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "menu2", Toast.LENGTH_SHORT).show();
                 materialDesignFAM.close(false);
+
+                Intent intent=new Intent(MainActivity.this,DiaryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
             }
         });
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {

@@ -21,7 +21,8 @@
         <activity android:name=".APISet.TestActivity" />
         <activity android:name=".RecommendMovieActivity" />
         <activity android:name=".RecommendMusicActivity" />
-        <activity android:name=".PlanActivity"></activity>
+        <activity android:name=".PlanActivity" />
+        <activity android:name=".DiaryActivity"></activity>
     </application>
 
 </manifest>
