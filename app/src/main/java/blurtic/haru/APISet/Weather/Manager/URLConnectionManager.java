@@ -502,14 +502,14 @@ public class URLConnectionManager extends Thread{
                 (mCurrentTimeAndDay.get(DAY));
          String st_date1 = cur_date; // + 0 일
 
-        //String test_data = "20161012";
+        String test_data = "20161014";
         for(int i = 0 ; i < mTime.size(); i++)
         {
             //내부적 루프 돌아서 다넣는 식,
 
             WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
             //if(st_date1.equals(mTime.get(i).fcstDate))
-            if(st_date1.equals(mTime.get(i).fcstDate) && i != 0)
+            if(test_data.equals(mTime.get(i).fcstDate))
             {
                 for(int j = i; j < mTime.size(); i++,j++)
                 {
@@ -519,10 +519,10 @@ public class URLConnectionManager extends Thread{
                     }
                     if(mTemp.isFullAllData()) break;
                 }
-
-            }
                 mTemp.ChangeMapping();
                 time_data.add(mTemp);
+            }
+
         }
 
 
