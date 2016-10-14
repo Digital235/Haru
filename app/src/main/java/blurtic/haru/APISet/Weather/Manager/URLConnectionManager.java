@@ -24,6 +24,7 @@ import java.util.StringTokenizer;
 import blurtic.haru.APISet.Weather.Class.CurrentTimeInfo;
 import blurtic.haru.APISet.Weather.Class.LocationInput;
 import blurtic.haru.APISet.Weather.Class.MiddleInfo;
+import blurtic.haru.APISet.Weather.Class.SpaceTimeCategory;
 import blurtic.haru.APISet.Weather.Class.WeatherData;
 import blurtic.haru.APISet.Weather.Class.WeatherToDay;
 import blurtic.haru.APISet.Weather.Class.WeatherToTime;
@@ -34,8 +35,11 @@ import blurtic.haru.APISet.Weather.Message.HandlerMessage;
  * Created by Kim W on 2016-06-13.
  */
 
-
-// 중기 예보를 먼저 받고, 그다음 단기 예보를 받아야함
+// WindMake(String rawData)
+    // LightMake
+    // typeMake
+    // SkyMake
+    // 중기 예보를 먼저 받고, 그다음 단기 예보를 받아야함
 
     /*
         16-07-30
@@ -97,6 +101,14 @@ public class URLConnectionManager extends Thread{
         if(base_time == "") return "";
 
         return base_time;
+    }
+
+    String StringToCategory(String category)
+    {
+
+
+
+        return "";
     }
 
     public String makeSpaceDataURL(String inputLocation)
@@ -200,7 +212,7 @@ public class URLConnectionManager extends Thread{
     /*
         RequestURLTodayWeather()
 
-     */
+
     int RequestURLTodayWeather(int pageNo)
     {
         int idx = 0;
@@ -249,6 +261,7 @@ public class URLConnectionManager extends Thread{
         }
         return idx;
     }
+    */
     /*
         RequestURL_MiddleInfoWeather()
         중기 온도
@@ -310,17 +323,31 @@ public class URLConnectionManager extends Thread{
         }
         return mContent;
     }
+
+
+
+
     /*
         TimeData 만듬
+        BaseTime 따로 저장. // 카테고리에 따라 fcstValue의 값을 토대로 측정
+        - baseDate
+        - basetime -> 현재 시간 보다 작으면 저장 X
+        - category -> POP / PTY / REH /
+        - fcstDate ->
+        - fcstTime
+        - fcstValue
+        x
+        y
      */
-    ContentValues RequestURL_CurrentTimeInfo(String urlData)
+    ArrayList<SpaceTimeCategory> RequestURL_CurrentTimeInfo(String urlData)
     {
 
         CurrentTimeInfo mInfo = new CurrentTimeInfo();
         ArrayList<String> mTemp = new ArrayList<>();
-
+        ArrayList<SpaceTimeCategory> mSpaceTime = new ArrayList<>();
         ContentValues mContent = new ContentValues();
-        //발표시각 06:00 , 18:00 둘중 하나
+        //BaseTime -> CurrentTimeInfo 참고
+        String category[] = {"category", "fcstDate", "fcstTime", "fcstValue"};
         try {
 
             URL url = new URL(urlData);
@@ -339,23 +366,40 @@ public class URLConnectionManager extends Thread{
             String tagName = "";
             while (parserEvent != XmlPullParser.END_DOCUMENT) {
                 // XML문이 끝날 때 까지 정보를 읽는다
-                if (parserEvent == XmlPullParser.START_TAG) {
+                Log.i(TAG, "parser : getName() = " + parser.getName());
+                if (parserEvent == XmlPullParser.START_TAG  && parser.getName().equals("item")) {
                     //시작태그의 이름을 알아냄
 
-                    if(parser.getName().contains("")) {
-                        String name = parser.getName();
-                        String value = parser.nextText();
-                        mContent.put(name,value);
-                        tagName = parser.getName();
-                        mTemp.add(name);
-                        mTemp.add(value);
-                        mTemp.add("/");
-                        // parserEvent = parser.next();
+                    SpaceTimeCategory mVal = new SpaceTimeCategory();
+                    for( ; ; ) {
 
-                        //for (int i = 0; i < tagIndex.length; i++) { // 하나의 item이 끝날 때, 들어감.
+                        for (int i = 0; i < category.length; i++) {
+                            String parser_test = parser.getName();
+                            if(parser_test == null) {
+                                i = 0;
+                                parserEvent = parser.next();
+                                parser_test = parser.getName();
+                            }
+                            if (parser_test.equals(category[i])) { // Parser 네임
 
-                        //}
+                                String name = parser.getName();
+                                String value = parser.nextText();
+                                mVal.InsideValue(name,value);
+                                tagName = parser.getName();
+                                mTemp.add(name);
+                                mTemp.add(value);
+                                mTemp.add("/");
+                                // parserEvent = parser.next();
+
+                            }
+                        }
+
+                        parserEvent = parser.next();
+                        if(parser.getName() == null) continue;
+
+                        if(parser.getName().equals("item") && parserEvent == XmlPullParser.END_TAG ) break;
                     }
+                    mSpaceTime.add(mVal);
                 }
                 parserEvent = parser.next();
 
@@ -367,7 +411,7 @@ public class URLConnectionManager extends Thread{
         }catch(IOException e){
             e.printStackTrace();
         }
-        return mContent;
+        return mSpaceTime;
     }
 
 
@@ -443,6 +487,51 @@ public class URLConnectionManager extends Thread{
 
     }
 
+    /*
+
+        fcstDate를 통해서, +0 , +1 , +2 , +3 을 통해 값을 찾아내야할듯
+        // category 통해서 fcstValue값을 배정
+        //시간 / 온도만 뽑아내면됨
+     */
+
+    public ArrayList<WeatherToTime> ContentToTimeArrayList(ArrayList<SpaceTimeCategory> mTime)
+    {
+        ArrayList<WeatherToTime> time_data = new ArrayList<>();
+
+        String cur_date = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) +
+                (mCurrentTimeAndDay.get(DAY));
+         String st_date1 = cur_date; // + 0 일
+
+        String test_data = "20161014";
+        for(int i = 0 ; i < mTime.size(); i++)
+        {
+            //내부적 루프 돌아서 다넣는 식,
+
+            WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
+            //if(st_date1.equals(mTime.get(i).fcstDate))
+            if(test_data.equals(mTime.get(i).fcstDate))
+            {
+                for(int j = i; j < mTime.size(); i++,j++)
+                {
+                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
+                    {
+                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                    }
+                    if(mTemp.isFullAllData()) break;
+                }
+                mTemp.ChangeMapping();
+                time_data.add(mTemp);
+            }
+
+        }
+
+
+        //한 날씨에 대한 정보가 아닌,
+
+
+        return time_data;
+    }
+
     public void ContentToMiddleArrayList(ContentValues mWeather, ContentValues mTemp)
     {
         String keyName = "ta";
@@ -510,18 +599,18 @@ public class URLConnectionManager extends Thread{
 
          */
 
-//        mTimeWeather = new ArrayList<>();
-//        spaceData = makeSpaceDataURL(inputLocation);
-//        ContentValues mTime = RequestURL_CurrentTimeInfo(spaceData);
-
+        mTimeWeather = new ArrayList<>();
+        spaceData = makeSpaceDataURL(inputLocation);
+        ArrayList<SpaceTimeCategory> mTime = RequestURL_CurrentTimeInfo(spaceData);
+        mTimeWeather = ContentToTimeArrayList(mTime);
 
         /*
             Total Data에 단기, 중기 데이터 넣음
 
          */
         ContentToMiddleArrayList(mVal,mVal2);
-        mTotalWeather = new WeatherData(mDayWeather,null);
-        this.mHandler = mHandler;
+        mTotalWeather = new WeatherData(mDayWeather,mTimeWeather);
+        //this.mHandler = mHandler;
 //        Message msg =l
 
 

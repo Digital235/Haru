@@ -4,21 +4,85 @@ package blurtic.haru.APISet.Weather.Class;
  * Created by Kim W on 2016-06-13.
  */
 public class WeatherToTime {
-    String date = "";
-    String type = "";
-    String rain6_Percent = "";
-    String rain1_Percent = "";
-    String rain_Weight = "";
+    public String date = "";
+    public String time = "";
+    public String type = "";
+    public String value = "";
 
-    String snow6_Percent = "";
-    String lightPercent ="";
-    String wind_Direction = "";
-    String temp3_Current = "";
-    String temp_Min = "";
-    String temp_Max = "";
+    String categoryName[] = {"POP","PTY","REH","SKY","UUU","VVV","VEC","WSD"};
+    String categoryValue[] = {"","","","","","","","",}; // 최종 결과값임
+    String categoryChangeVal[] = {"","","","","","","",""};
+    boolean categoryCheck[] = {false,false,false,false,false,false,false,false,false,};
+    //온도 날씨만
+    public WeatherToTime(String date, String time, String type, String value) {
+        this.date = date;
+        this.time = time;
+        this.type = type;
+        this.value = value;
+    }
+    public void ChangeMapping()
+    {
+        CurrentTimeInfo mInfo = new CurrentTimeInfo();
+        for(int i = 0; i < categoryName.length; i++)
+        {
+            categoryChangeVal[i] = mInfo.CodeMapping(categoryName[i], categoryValue[i]);
+        }
+    }
 
-    String humi = "";
-    String skyType = "";
+    public boolean isFullAllData()
+    {
+        for(int i = 0; i < categoryValue.length; i++)
+        {
+            if(categoryCheck[i] == false)
+                return false;
+        }
+
+        return true;
+    }
+
+    // 각 코드에 매핑
+    // 한글로 변환은 currentTimeInfo에 기술
+    public void HashValue(String category,String val)
+    {
+        for(int i = 0; i < categoryName.length; i++)
+        {
+            if(categoryName[i].equals(category)) {
+                categoryValue[i] =  val;
+                categoryCheck[i] = true;
+                return ;
+            }
+        }
+
+        return ;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setCategoryName(String[] categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public void setDate(String date) {
         this.date = date;
@@ -26,49 +90,5 @@ public class WeatherToTime {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public void setRain6_Percent(String rain6_Percent) {
-        this.rain6_Percent = rain6_Percent;
-    }
-
-    public void setRain1_Percent(String rain1_Percent) {
-        this.rain1_Percent = rain1_Percent;
-    }
-
-    public void setRain_Weight(String rain_Weight) {
-        this.rain_Weight = rain_Weight;
-    }
-
-    public void setSnow6_Percent(String snow6_Percent) {
-        this.snow6_Percent = snow6_Percent;
-    }
-
-    public void setLightPercent(String lightPercent) {
-        this.lightPercent = lightPercent;
-    }
-
-    public void setWind_Direction(String wind_Direction) {
-        this.wind_Direction = wind_Direction;
-    }
-
-    public void setTemp3_Current(String temp3_Current) {
-        this.temp3_Current = temp3_Current;
-    }
-
-    public void setTemp_Min(String temp_Min) {
-        this.temp_Min = temp_Min;
-    }
-
-    public void setTemp_Max(String temp_Max) {
-        this.temp_Max = temp_Max;
-    }
-
-    public void setHumi(String humi) {
-        this.humi = humi;
-    }
-
-    public void setSkyType(String skyType) {
-        this.skyType = skyType;
     }
 }
