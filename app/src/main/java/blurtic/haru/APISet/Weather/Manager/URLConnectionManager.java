@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Space;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -28,8 +27,8 @@ import blurtic.haru.APISet.Weather.Class.SpaceTimeCategory;
 import blurtic.haru.APISet.Weather.Class.WeatherData;
 import blurtic.haru.APISet.Weather.Class.WeatherToDay;
 import blurtic.haru.APISet.Weather.Class.WeatherToTime;
-import blurtic.haru.APISet.TestActivity;
 import blurtic.haru.APISet.Weather.Message.HandlerMessage;
+import blurtic.haru.MainActivity;
 
 /**
  * Created by Kim W on 2016-06-13.
@@ -64,7 +63,7 @@ public class URLConnectionManager extends Thread{
     final static int HOUR = 3;
     final static int MIN = 4;
     final static String TAG = "URLConnectionManager";
-    TestActivity mHandler;
+    MainActivity mHandler;
     String inputLocation;
     WeatherData mTotalWeather;
     ArrayList<WeatherToDay> mDayWeather;
@@ -127,7 +126,7 @@ public class URLConnectionManager extends Thread{
     }
 
 
-    public URLConnectionManager(Context mContext, String inputLocation,TestActivity mData) {
+    public URLConnectionManager(Context mContext, String inputLocation,MainActivity mData) {
         this.mContext = mContext;
         mCurrentTimeAndDay = MakeCurrentDayAndTime();
         this.inputLocation = inputLocation;
@@ -502,14 +501,14 @@ public class URLConnectionManager extends Thread{
                 (mCurrentTimeAndDay.get(DAY));
          String st_date1 = cur_date; // + 0 일
 
-        String test_data = "20161014";
+        //String test_data = "20161014";
         for(int i = 0 ; i < mTime.size(); i++)
         {
             //내부적 루프 돌아서 다넣는 식,
 
             WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
-            //if(st_date1.equals(mTime.get(i).fcstDate))
-            if(test_data.equals(mTime.get(i).fcstDate))
+            if(st_date1.equals(mTime.get(i).fcstDate))
+            //if(test_data.equals(mTime.get(i).fcstDate))
             {
                 for(int j = i; j < mTime.size(); i++,j++)
                 {

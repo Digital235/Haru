@@ -58,13 +58,28 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/img_todayweather"
-                    android:src="@mipmap/icon_sun"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/img_todayweather"
+                        android:src="@mipmap/icon_sun"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:id="@+id/txt_currentTemp"
+                        android:layout_gravity="center"
+                        android:textColor="#ffffff"
+                        android:textSize="17dp" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

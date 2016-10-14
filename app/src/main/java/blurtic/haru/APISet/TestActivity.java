@@ -45,7 +45,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         btn_totalRead.setOnClickListener(this);
         tv_totalRead = (TextView)findViewById(R.id.tv_readPrint);
         mMain = this;
-        mManager = new URLConnectionManager(this.getApplicationContext(),"",mMain);
+        //mManager = new URLConnectionManager(this.getApplicationContext(),"",this);
     }
 
     @Override
@@ -95,28 +95,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                                 + mTotal.mDayWeather.get(i).minTemp + "\r\n";
                     }
                     tv_totalRead.setText(data);
-
-
-
-//                    ArrayList<ContentValues> mTrainTicekt = (ArrayList<ContentValues>)msg.obj;
-//                    ContentValueToArrayList(mTrainTicekt);
-//                    ArrayList<String> result_Text = makeResult();
-//                    if(result_Text == null) {
-//                        Toast.makeText(mContext, "역 운행정보가 없습니다", Toast.LENGTH_SHORT);
-//                        break;
-//                    }
-//                    String tv_SetResult = "";
-//                    for(int i = 0; i < result_Text.size(); i++)
-//                    {
-//                        String temp = result_Text.get(i);
-//                        tv_SetResult += temp;
-//                    }
-//                    tv_result.setText(tv_SetResult);
-//
-//                    dialog.dismiss();
-//                    break;
-//                default:
-//                    break;
             }
         }
     };

@@ -6,6 +6,8 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -30,18 +32,28 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import blurtic.haru.APISet.Weather.Class.WeatherData;
+import blurtic.haru.APISet.Weather.Class.WeatherToTime;
+import blurtic.haru.APISet.Weather.Manager.URLConnectionManager;
+import blurtic.haru.APISet.Weather.Message.HandlerMessage;
+
 public class MainActivity extends AppCompatActivity {
     int currentWeather;
+    int currentTemp;
     ArrayList<TimeWeatherItem> timeWeatherItemList = new ArrayList<TimeWeatherItem>();
     ImageView todayWeatherIcon;
+    TextView todayTemp;
     TextView todaySummery;
     TextView todayDate;
+    TextView todayDetail;
     FrameLayout recommendMovie;
     FrameLayout recommendMusic;
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
+    URLConnectionManager mManager;
+    ArrayList<WeatherToTime> mTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
         ImageButton bt_Detail = (ImageButton)findViewById(R.id.imgbtn_detail);
         todayWeatherIcon = (ImageView)findViewById(R.id.img_todayweather);
+        todayTemp = (TextView)findViewById(R.id.txt_currentTemp);
         todaySummery = (TextView)findViewById(R.id.txt_todaysummery);
         todayDate = (TextView)findViewById(R.id.txt_date);
+        todayDetail = (TextView)findViewById(R.id.txt_todayweather_detail);
         final LinearLayout layout_TodayDetail = (LinearLayout)findViewById(R.id.layout_today_detail);
         HorizontalListView timeWeatherListView = (HorizontalListView) findViewById(R.id.listview_timeweather);
         recommendMovie = (FrameLayout)findViewById(R.id.recommend_movie);
@@ -67,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item3);
+
+        mManager = new URLConnectionManager(this.getApplicationContext(),"",this);
+        mManager.run();
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -148,14 +165,32 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyy년 M월 d일");
         todayDate.setText(df.format(c.getTime()));
 
-        setTodaySummery(10,20);
+        setTodaySummery(12, 18);
 
-        currentWeather=0;
-        setWeatherImage(todayWeatherIcon,currentWeather);
 
-        timeWeatherItemList.add(new TimeWeatherItem(0, 1, 2));
-        timeWeatherItemList.add(new TimeWeatherItem(3, 2, 3));
-        timeWeatherItemList.add(new TimeWeatherItem(6, 3, 4));
+
+        timeWeatherItemList.add(new TimeWeatherItem(0, 1, 14));
+        timeWeatherItemList.add(new TimeWeatherItem(3, 0, 13));
+        timeWeatherItemList.add(new TimeWeatherItem(6, 1, 13));
+        timeWeatherItemList.add(new TimeWeatherItem(9, 2, 15));
+        timeWeatherItemList.add(new TimeWeatherItem(12, 2, 16));
+        timeWeatherItemList.add(new TimeWeatherItem(15, 2, 17));
+        timeWeatherItemList.add(new TimeWeatherItem(18, 2, 16));
+        timeWeatherItemList.add(new TimeWeatherItem(21, 2, 15));
+        todayDetail.setText("강수확률 : 80%\n\n풍향 : 남동\n풍속 : 2 (m/s)\n\n" + "습도 : 75%\n\n식중독지수 : 33(주의)\n자외선지수 : 2(낮음)");
+
+        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        currentWeather=timeWeatherItemList.get(timeWeatherItemList.size()-1).weather;
+        currentTemp=timeWeatherItemList.get(timeWeatherItemList.size()-1).temp;
+        for(int i=1; i<timeWeatherItemList.size(); i++){
+            if(timeWeatherItemList.get(i).time>currentHour) {
+                currentWeather = timeWeatherItemList.get(i - 1).weather;
+                currentWeather = timeWeatherItemList.get(i - 1).temp;
+                break;
+            }
+        }
+        setWeatherImage(todayWeatherIcon, currentWeather);
+        todayTemp.setText(Integer.toString(currentTemp)+"℃");
 
         timeWeatherListView.setAdapter(new HAdapter());
     }
@@ -182,18 +217,6 @@ public class MainActivity extends AppCompatActivity {
             temp=t2;
         }
     }
-    ////////////////////////////////////////////////////weather list
-//    private static String[] dataObjects = new String[]{
-//            "시간별 날씨",
-//            "시간별 날씨2",
-//            "시간별 날씨3",
-//            "시간별 날씨4",
-//            "시간별 날씨5",
-//            "시간별 날씨6",
-//            "시간별 날씨7",
-//            "시간별 날씨8",
-//            "시간별 날씨9",
-//            "시간별 날씨10"};
 
     private class  HAdapter extends BaseAdapter {
 
@@ -219,9 +242,9 @@ public class MainActivity extends AppCompatActivity {
             TextView title = (TextView) retval.findViewById(R.id.txt_timeweather_date);
             TextView temp = (TextView) retval.findViewById(R.id.txt_timeweather_temp);
             ImageView image = (ImageView) retval.findViewById(R.id.img_timeweather_img);
-            temp.setText(""+timeWeatherItemList.get(position).time+"℃");
+            temp.setText(""+timeWeatherItemList.get(position).temp+"℃");
             setWeatherImage(image, timeWeatherItemList.get(position).weather);
-            title.setText(""+timeWeatherItemList.get(position).temp+"시");
+            title.setText(""+timeWeatherItemList.get(position).time+"시");
 
             return retval;
         }
@@ -286,4 +309,26 @@ public class MainActivity extends AppCompatActivity {
         a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
+
+    public Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HandlerMessage.THREAD_HANDLER_MIDDLELAND_SUCCESS_INFO:
+                    WeatherData mTotal = (WeatherData)msg.obj;
+                    mTime = mTotal.mTimeWeather; // 이놈 쓰면댐
+//                    String data = "";
+//                    for(int i = 0; i < mTotal.mDayWeather.size(); i++)
+//                    {
+//                        data = data +  mTotal.mDayWeather.get(i).day + "/"
+//                                + mTotal.mDayWeather.get(i).time + "/"
+//                                + mTotal.mDayWeather.get(i).weather + "/"
+//                                + mTotal.mDayWeather.get(i).maxTemp + "/"
+//                                + mTotal.mDayWeather.get(i).minTemp + "\r\n";
+//                    }
+                   // tv_totalRead.setText(data);
+            }
+        }
+    };
 }

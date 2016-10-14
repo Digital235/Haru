@@ -52,11 +52,12 @@ public class RecommendMusicActivity extends AppCompatActivity {
         setWeather(currentWeather);
 
         MusicItem.globalNumber=0;
-        musicArray.add(new MusicItem("dfb","dfb","http://m.naver.com"));
-        musicArray.add(new MusicItem("13","13","http://m.daum.net"));
-        musicArray.add(new MusicItem("dd","aa","dd"));
-        musicArray.add(new MusicItem("aa","bb","http://m.naver.com"));
-        musicArray.add(new MusicItem("cc","ff","http://m.daum.net"));
+        MovieItem.globalNumber=0;
+        for(int i=0; i<10; i++){
+            if(MovieDatabase.items[i]!=null) {
+                musicArray.add(MusicDatabase.items[i]);
+            }
+        }
 
         for(int i=0; i<musicArray.size(); i++){
             addRow(musicArray.get(i));
@@ -168,5 +169,21 @@ class MusicItem{
         url=u;
         favorite=false;
         globalNumber++;
+    }
+}
+
+class MusicDatabase{
+    public static MusicItem[] items = new MusicItem[10];
+    static{
+        items[0]=new MusicItem("볼빨간사춘기","우주를 줄게","http://www.melon.com/album/detail.htm?albumId=2707131");
+        items[1]=new MusicItem("박효신","숨","http://www.melon.com/album/detail.htm?albumId=10001952");
+        items[2]=new MusicItem("임창정","내가 저지른 사랑","http://www.melon.com/album/detail.htm?albumId=2708957");
+        items[3]=new MusicItem("한동근", "이 소설의 끝을 다시 써보려 해", "http://www.melon.com/album/detail.htm?albumId=2284064");
+        items[4]=new MusicItem("Red Velvet (레드벨벳)", "러시안 룰렛 (Russian Roulette)", "http://www.melon.com/album/detail.htm?albumId=2709585");
+        items[5]=new MusicItem("한동근", "그대라는 사치", "http://www.melon.com/album/detail.htm?albumId=2706226");
+        items[6]=new MusicItem("유재석, EXO", "Dancing King", "http://www.melon.com/album/detail.htm?albumId=2711209");
+        items[7]=new MusicItem("어반자카파", "목요일 밤 (Feat. 빈지노)", "http://www.melon.com/album/detail.htm?albumId=2705941");
+        items[8]=new MusicItem("헤이즈 (Heize)", "돌아오지마 (Feat. 용준형 Of 비스트)", "http://www.melon.com/album/detail.htm?albumId=2679308");
+        items[9]=new MusicItem("BLACKPINK", "휘파람", "http://www.melon.com/album/detail.htm?albumId=2703168");
     }
 }

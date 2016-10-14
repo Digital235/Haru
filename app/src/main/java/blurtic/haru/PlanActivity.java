@@ -62,15 +62,18 @@ public class PlanActivity extends AppCompatActivity {
                         EditText edit_name = (EditText) dialogView.findViewById(R.id.edit_name);
                         EditText edit_hour = (EditText) dialogView.findViewById(R.id.edit_hour);
                         EditText edit_minute = (EditText) dialogView.findViewById(R.id.edit_minute);
-                        planItemList.add(new PlanItem(Integer.parseInt(edit_hour.getText().toString()),
-                                Integer.parseInt(edit_minute.getText().toString()),
-                                edit_name.getText().toString()));
-                        Collections.sort(planItemList);
-                        mListView.deferNotifyDataSetChanged();
-                        savePlanToFile();
-                        edit_name.setText("");
-                        edit_hour.setText("");
-                        edit_minute.setText("");
+                        try {
+                            planItemList.add(new PlanItem(Integer.parseInt(edit_hour.getText().toString()),
+                                    Integer.parseInt(edit_minute.getText().toString()),
+                                    edit_name.getText().toString()));
+                            Collections.sort(planItemList);
+                            mListView.deferNotifyDataSetChanged();
+                            savePlanToFile();
+                            edit_name.setText("");
+                            edit_hour.setText("");
+                            edit_minute.setText("");
+                        }
+                        catch(Exception e){}
                     }
                 }
         );
