@@ -63,6 +63,12 @@ public class RecommendMusicActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void finish(){
+        super.finish();
+        overridePendingTransition( R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+    }
+
     void addRow(MusicItem mov){
         View item = LayoutInflater.from(this).inflate(R.layout.recommend_listitem, null);
         TextView titleView = (TextView) item.findViewById(R.id.txt_recommendinfo2);

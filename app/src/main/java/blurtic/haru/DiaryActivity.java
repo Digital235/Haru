@@ -16,8 +16,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +37,7 @@ public class DiaryActivity extends AppCompatActivity {
 
     private Calendar mCal;
     private Calendar todayCal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +49,11 @@ public class DiaryActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        tvDate = (TextView)findViewById(R.id.tv_date);
-        writeButton = (ImageView)findViewById(R.id.bt_write);
-        gridView = (GridView)findViewById(R.id.gridview);
-        prevMonthBtn = (ImageView)findViewById(R.id.btn_prevMonth);
-        nextMonthBtn = (ImageView)findViewById(R.id.btn_nextMonth);
+        tvDate = (TextView) findViewById(R.id.tv_date);
+        writeButton = (ImageView) findViewById(R.id.bt_write);
+        gridView = (GridView) findViewById(R.id.gridview);
+        prevMonthBtn = (ImageView) findViewById(R.id.btn_prevMonth);
+        nextMonthBtn = (ImageView) findViewById(R.id.btn_nextMonth);
         todayCal = Calendar.getInstance();
 
         writeButton.setOnClickListener(new View.OnClickListener() {
@@ -63,9 +64,9 @@ public class DiaryActivity extends AppCompatActivity {
                 SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
                 long now = System.currentTimeMillis();
                 Date date = new Date(now);
-                String dateString = curYearFormat.format(date)+ curMonthFormat.format(date)+ curDayFormat.format(date);
+                String dateString = curYearFormat.format(date) + curMonthFormat.format(date) + curDayFormat.format(date);
 
-                Intent intent=new Intent(DiaryActivity.this, DiaryWriteActivity.class);
+                Intent intent = new Intent(DiaryActivity.this, DiaryWriteActivity.class);
                 intent.putExtra("date", dateString);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
@@ -76,11 +77,11 @@ public class DiaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int year = mCal.get(Calendar.YEAR);
-                int month = mCal.get(Calendar.MONTH)-1;
+                int month = mCal.get(Calendar.MONTH) - 1;
                 mCal.set(year, month, 1);
                 makeDayList(new Date(mCal.getTimeInMillis()));
                 gridAdapter.notifyDataSetChanged();
-                gridAdapter.setYearMonth(year,month+1);
+                gridAdapter.setYearMonth(year, month + 1);
             }
         });
 
@@ -88,11 +89,11 @@ public class DiaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int year = mCal.get(Calendar.YEAR);
-                int month = mCal.get(Calendar.MONTH)+1;
+                int month = mCal.get(Calendar.MONTH) + 1;
                 mCal.set(year, month, 1);
                 makeDayList(new Date(mCal.getTimeInMillis()));
                 gridAdapter.notifyDataSetChanged();
-                gridAdapter.setYearMonth(year,month+1);
+                gridAdapter.setYearMonth(year, month + 1);
             }
         });
 
@@ -108,17 +109,31 @@ public class DiaryActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ViewHolder holder=(ViewHolder)view.getTag();
-                String sDay=holder.calendarDayView.getText().toString();
-                if(TextUtils.isDigitsOnly(sDay) && !sDay.isEmpty()) {
-                    if(sDay.length()==1)sDay="0"+sDay;
-                    Toast.makeText(DiaryActivity.this, gridAdapter.getYearMonth()+sDay, Toast.LENGTH_SHORT).show();
-                }
-                else{
+                ViewHolder holder = (ViewHolder) view.getTag();
+                String sDay = holder.calendarDayView.getText().toString();
+                String dateString;
+                if (TextUtils.isDigitsOnly(sDay) && !sDay.isEmpty()) {
+                    if (sDay.length() == 1) sDay = "0" + sDay;
+                    dateString = gridAdapter.getYearMonth() + sDay;
+                    //Toast.makeText(DiaryActivity.this, dateString, Toast.LENGTH_SHORT).show();
 
+                    Intent intent = new Intent(DiaryActivity.this, DiaryWriteActivity.class);
+                    intent.putExtra("date", dateString);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                } else {
+                    //do nothing
                 }
             }
         });
+
+
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
     }
 
     /**
@@ -134,7 +149,7 @@ public class DiaryActivity extends AppCompatActivity {
         }
     }
 
-    private void calculateFirstDay(Date date){
+    private void calculateFirstDay(Date date) {
         SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
         SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
         SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
@@ -146,7 +161,8 @@ public class DiaryActivity extends AppCompatActivity {
             dayList.add("");
         }
     }
-    private void makeDayList(Date date){
+
+    private void makeDayList(Date date) {
         SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
         SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
         SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
@@ -162,7 +178,7 @@ public class DiaryActivity extends AppCompatActivity {
         dayList.add("금");
         dayList.add("토");
 
-        if(mCal==null)mCal = Calendar.getInstance();
+        if (mCal == null) mCal = Calendar.getInstance();
 
         //이번달 1일 무슨요일인지 판단 mCal.set(Year,Month,Day)
         calculateFirstDay(date);
@@ -170,9 +186,16 @@ public class DiaryActivity extends AppCompatActivity {
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
     }
 
+    public boolean diaryFileExist(String dateSting) {
+        String filename = "d" + dateSting;
+        File file = getFileStreamPath(filename);
+        if (file == null || !file.exists()) {
+            return false;
+        } else return true;
+    }
+
     /**
      * 그리드뷰 어댑터
-     *
      */
     private class GridAdapter extends BaseAdapter {
 
@@ -180,6 +203,7 @@ public class DiaryActivity extends AppCompatActivity {
         private final LayoutInflater inflater;
         int year;
         int month;
+
         /**
          * 생성자
          *
@@ -188,7 +212,7 @@ public class DiaryActivity extends AppCompatActivity {
          */
         public GridAdapter(Context context, List<String> list) {
             this.list = list;
-            this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             long now = System.currentTimeMillis();
             final Date date = new Date(now);
@@ -197,20 +221,20 @@ public class DiaryActivity extends AppCompatActivity {
             SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
             SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
 
-            year=Integer.parseInt(curYearFormat.format(date));
-            month=Integer.parseInt(curMonthFormat.format(date));
+            year = Integer.parseInt(curYearFormat.format(date));
+            month = Integer.parseInt(curMonthFormat.format(date));
         }
 
-        public void setYearMonth(int y, int m){
-            year=y;
-            month=m;
+        public void setYearMonth(int y, int m) {
+            year = y;
+            month = m;
         }
 
-        public String getYearMonth(){
-            String sMonth="";
-            if(month<10)sMonth="0"+month;
-            else sMonth=""+month;
-            return ""+year+sMonth;
+        public String getYearMonth() {
+            String sMonth = "";
+            if (month < 10) sMonth = "0" + month;
+            else sMonth = "" + month;
+            return "" + year + sMonth;
         }
 
         @Override
@@ -237,25 +261,43 @@ public class DiaryActivity extends AppCompatActivity {
                 convertView = inflater.inflate(R.layout.calendar_item, parent, false);
                 holder = new ViewHolder();
 
-                holder.dayBackground = (LinearLayout)convertView.findViewById(R.id.layout_dayBackground);
-                holder.calendarDayView = (TextView)convertView.findViewById(R.id.txt_calendarDay);
+                holder.dayBackground = (LinearLayout) convertView.findViewById(R.id.layout_dayBackground);
+                holder.calendarDayView = (TextView) convertView.findViewById(R.id.txt_calendarDay);
 
                 convertView.setTag(holder);
             } else {
-                holder = (ViewHolder)convertView.getTag();
+                holder = (ViewHolder) convertView.getTag();
             }
             holder.calendarDayView.setText("" + getItem(position));
-
-            //해당 날짜 텍스트 컬러,배경 변경
-            holder.dayBackground.setBackgroundColor(Color.parseColor("#00000000"));
-            if(mCal==null)mCal = Calendar.getInstance();
-            //오늘 day 가져옴
-            int yearOfToday = todayCal.get(Calendar.YEAR);
-            int monthOfToday = todayCal.get(Calendar.MONTH)+1;
-            int dayOfToday = todayCal.get(Calendar.DAY_OF_MONTH);
-            String sToday = String.valueOf(dayOfToday);
-            if (yearOfToday==gridAdapter.year && monthOfToday==gridAdapter.month &&sToday.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
-                holder.dayBackground.setBackgroundColor(Color.parseColor("#8CFFB700"));
+            if (position < 7) {
+                if (position == 0) holder.calendarDayView.setTextColor(Color.parseColor("#ff3f7c"));
+                else if (position == 6)
+                    holder.calendarDayView.setTextColor(Color.parseColor("#2D9DFF"));
+                else holder.calendarDayView.setTextColor(Color.parseColor("#ffffff"));
+            } else {
+                String sDay = getItem(position);
+                String dateString;
+                if (TextUtils.isDigitsOnly(sDay) && !sDay.isEmpty()) {
+                    if (sDay.length() == 1) sDay = "0" + sDay;
+                    dateString = gridAdapter.getYearMonth() + sDay;
+                    if(diaryFileExist(dateString)){
+                        holder.calendarDayView.setTextColor(Color.parseColor("#ffffff"));
+                    }
+                    else{
+                        holder.calendarDayView.setTextColor(Color.parseColor("#808080"));
+                    }
+                }
+                //해당 날짜 텍스트 컬러,배경 변경
+                holder.dayBackground.setBackgroundColor(Color.parseColor("#00000000"));
+                if (mCal == null) mCal = Calendar.getInstance();
+                //오늘 day 가져옴
+                int yearOfToday = todayCal.get(Calendar.YEAR);
+                int monthOfToday = todayCal.get(Calendar.MONTH) + 1;
+                int dayOfToday = todayCal.get(Calendar.DAY_OF_MONTH);
+                String sToday = String.valueOf(dayOfToday);
+                if (yearOfToday == gridAdapter.year && monthOfToday == gridAdapter.month && sToday.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
+                    holder.dayBackground.setBackgroundColor(Color.parseColor("#8CFFB700"));
+                }
             }
             return convertView;
         }
@@ -265,4 +307,5 @@ public class DiaryActivity extends AppCompatActivity {
         LinearLayout dayBackground;
         TextView calendarDayView;
     }
+
 }

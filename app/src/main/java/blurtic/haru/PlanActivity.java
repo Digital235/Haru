@@ -160,6 +160,12 @@ public class PlanActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void finish(){
+        super.finish();
+        overridePendingTransition( R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+    }
+
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());

@@ -23,8 +23,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="20dp">
+            android:layout_height="80dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -48,6 +47,16 @@
                 android:gravity="center_vertical|center_horizontal" />
 
         </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0000년 0월 0일"
+            android:id="@+id/txt_diaryWriteDate"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:layout_marginBottom="10dp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -88,4 +97,5 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+
 </FrameLayout>

@@ -1,5 +1,6 @@
 package blurtic.haru;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class DiaryWriteActivity extends AppCompatActivity {
@@ -23,7 +26,11 @@ public class DiaryWriteActivity extends AppCompatActivity {
     private AppAdapter mAdapter;
     private SwipeMenuListView mListView;
     private TextView okButton;
+    private TextView todayDate;
     private String dateString;
+    private EditText diaryContent;
+
+    private DiaryItem diaryItem=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +44,40 @@ public class DiaryWriteActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
         dateString = intent.getExtras().getString("date");
+        okButton = (TextView)findViewById(R.id.bt_ok);
+        todayDate = (TextView)findViewById(R.id.txt_diaryWriteDate);
+        diaryContent = (EditText)findViewById(R.id.diaryContents);
 
+        todayDate.setText(dateString.substring(0,4)+"년 " + dateString.substring(4,6)+ "월 " + dateString.substring(6,8)+"일");
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                diaryItem.setContent(diaryContent.getText().toString());
+                saveDiaryToFile();
+                finish();
+            }
+        });
+
+        loadDiaryFromFile(dateString);
         loadPlanFromFile(dateString);
 
+        if(diaryItem!=null){
+            diaryContent.setText(diaryItem.getContent());
+        }
+        else{
+            diaryItem=new DiaryItem();
+        }
         if(planItemList!=null) {
             mListView = (SwipeMenuListView) findViewById(R.id.planListView);
-            okButton = (TextView)findViewById(R.id.bt_ok);
-
             mAdapter = new AppAdapter();
             mListView.setAdapter(mAdapter);
         }
+    }
+
+    @Override
+    public void finish(){
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     private int dp2px(int dp) {
@@ -129,6 +160,43 @@ public class DiaryWriteActivity extends AppCompatActivity {
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void loadDiaryFromFile(String dateSting){
+        String filename="d"+dateSting;
+        try {
+            File file = getFileStreamPath(filename);
+            if(file == null || !file.exists()) {
+                return;
+            }
+            FileInputStream fis = openFileInput(filename);
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+
+            diaryItem = DiaryItem.fromJson(new String(data));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveDiaryToFile(){
+        String filename="d"+dateString;
+        if(!diaryItem.getContent().isEmpty()) {
+            FileOutputStream outputStream;
+            try {
+                outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                outputStream.write(DiaryItem.toJson(diaryItem).toString().getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            File dir = getFilesDir();
+            File file = new File(dir, filename);
+            file.delete();
         }
     }
 
