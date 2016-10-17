@@ -165,19 +165,19 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyy년 M월 d일");
         todayDate.setText(df.format(c.getTime()));
 
-        setTodaySummery(12, 18);
+        setTodaySummery(14, 24);
 
 
 
-        timeWeatherItemList.add(new TimeWeatherItem(0, 1, 14));
-        timeWeatherItemList.add(new TimeWeatherItem(3, 0, 13));
-        timeWeatherItemList.add(new TimeWeatherItem(6, 1, 13));
-        timeWeatherItemList.add(new TimeWeatherItem(9, 2, 15));
-        timeWeatherItemList.add(new TimeWeatherItem(12, 2, 16));
-        timeWeatherItemList.add(new TimeWeatherItem(15, 2, 17));
-        timeWeatherItemList.add(new TimeWeatherItem(18, 2, 16));
-        timeWeatherItemList.add(new TimeWeatherItem(21, 2, 15));
-        todayDetail.setText("강수확률 : 80%\n\n풍향 : 남동\n풍속 : 2 (m/s)\n\n" + "습도 : 75%\n\n식중독지수 : 33(주의)\n자외선지수 : 2(낮음)");
+        timeWeatherItemList.add(new TimeWeatherItem(3, 1, 14));
+        timeWeatherItemList.add(new TimeWeatherItem(6, 1, 14));
+        timeWeatherItemList.add(new TimeWeatherItem(9, 1, 16));
+        timeWeatherItemList.add(new TimeWeatherItem(12, 1, 21));
+        timeWeatherItemList.add(new TimeWeatherItem(15, 1, 24));
+        timeWeatherItemList.add(new TimeWeatherItem(18, 0, 20));
+        timeWeatherItemList.add(new TimeWeatherItem(21, 0, 18));
+        timeWeatherItemList.add(new TimeWeatherItem(24, 0, 15));
+        todayDetail.setText("강수확률 : 20%\n\n풍향 : 남동\n풍속 : 2 (m/s)\n\n" + "습도 : 61%\n\n식중독지수 : 29 (관심) \n자외선지수 : 3 (보통)");
 
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         currentWeather=timeWeatherItemList.get(timeWeatherItemList.size()-1).weather;
