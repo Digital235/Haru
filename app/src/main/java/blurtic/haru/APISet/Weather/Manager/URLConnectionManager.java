@@ -508,6 +508,7 @@ public class URLConnectionManager extends Thread{
         String st_date1 = year+month+day; // + 0 일
         String st_date2 = year+month+(integer_day+1);
         String st_date3 = year+month+(integer_day+2);
+        String st_date4 = year+month+(integer_day+3);
         //String test_data = "20161014";
         for(int i = 0 ; i < mTime.size(); i++)
         {
@@ -542,6 +543,18 @@ public class URLConnectionManager extends Thread{
 
 
             }else if(st_date3.equals(mTime.get(i).fcstDate))
+            {
+                for(int j = i; j < mTime.size(); i++,j++)
+                {
+                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
+                    {
+                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                    }
+                    if(mTemp.isFullAllData()) break;
+                }
+                mTemp.ChangeMapping();
+                time_data.add(mTemp);
+            }else if(st_date4.equals(mTime.get(i).fcstDate))
             {
                 for(int j = i; j < mTime.size(); i++,j++)
                 {
