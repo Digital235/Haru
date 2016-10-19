@@ -4,12 +4,14 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class RecommendMusicActivity extends AppCompatActivity {
     ViewGroup layout;
@@ -45,6 +55,62 @@ public class RecommendMusicActivity extends AppCompatActivity {
         weatherMessage = (TextView)findViewById(R.id.txt_musicweather);
         layout = (ViewGroup)findViewById(R.id.root_layout);
 
+        weatherMessage.setText("데이터를 받아오는 중입니다.");
+
+        new Thread() {
+            @Override
+            public void run() {
+                String path ="http://asdfgh25.dothome.co.kr/haruconnect.txt";
+                URL u = null;
+                try {
+                    u = new URL(path);
+                    HttpURLConnection c = (HttpURLConnection) u.openConnection();
+                    c.setRequestMethod("GET");
+                    c.connect();
+                    InputStream in = c.getInputStream();
+                    final ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    in.read(buffer); // Read from Buffer.
+                    bo.write(buffer); // Write Into Buffer.
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //TextView text = (TextView) findViewById(R.id.TextView1);
+                            //text.setText(bo.toString());
+                            Log.v("test", bo.toString());
+                            if(bo.toString().startsWith("ok")){
+                                initialize();
+                            }
+                            else{
+                                weatherMessage.setText("서버 접속에 실패했습니다.");
+                            }
+                            try {
+                                bo.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                } catch (Exception e) {
+                    Log.v("error", e.getMessage());
+                    weatherMessage.setText("서버 접속에 실패했습니다.");
+                }
+//               catch (ProtocolException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+            }
+        }.start();
+
+        //initialize();
+
+    }
+
+    void initialize(){
         musicArray = new ArrayList<MusicItem>();
 
         Intent intent = getIntent();
@@ -66,6 +132,7 @@ public class RecommendMusicActivity extends AppCompatActivity {
 
     @Override
     public void finish(){
+        saveLikes();
         super.finish();
         overridePendingTransition( R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
     }
@@ -74,8 +141,8 @@ public class RecommendMusicActivity extends AppCompatActivity {
         View item = LayoutInflater.from(this).inflate(R.layout.recommend_listitem, null);
         TextView titleView = (TextView) item.findViewById(R.id.txt_recommendinfo2);
         TextView genreView = (TextView) item.findViewById(R.id.txt_recommendinfo1);
-        titleView.setText(mov.genre);
-        genreView.setText(mov.title);
+        titleView.setText(mov.title);
+        genreView.setText(mov.genre);
         final String url=mov.url;
         final int movNumber=mov.number;
 
@@ -107,6 +174,11 @@ public class RecommendMusicActivity extends AppCompatActivity {
             }
         });
         final ImageView likeButton = (ImageView)item.findViewById(R.id.bt_like);
+        if (musicArray.get(movNumber).favorite) {
+            likeButton.setImageResource(R.drawable.ic_heart2);
+        } else {
+            likeButton.setImageResource(R.drawable.ic_heart1);
+        }
         likeButton.setOnClickListener(new View.OnClickListener() {
             ImageView button = likeButton;
             int number = movNumber;
@@ -151,8 +223,38 @@ public class RecommendMusicActivity extends AppCompatActivity {
             weatherIcon.setImageResource(R.mipmap.icon_thunder);
             weatherMessage.setText("오늘의 날씨는 '천둥'입니다");
         }
+        else if(weather==4) {
+            weatherIcon.setImageResource(R.mipmap.icon_gurum);
+            weatherMessage.setText("오늘의 날씨는 '구름'입니다");
+        }
+        else if(weather==5) {
+            weatherIcon.setImageResource(R.mipmap.icon_snow);
+            weatherMessage.setText("오늘의 날씨는 '눈'입니다");
+        }
+    }
+
+    void saveLikes() {
+        String filename = "l" + stringifyDate();
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(LikeJsonParser.toJson().toString().getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String stringifyDate() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        return df.format(c.getTime());
     }
 }
+
+
 
 class MusicItem{
     static int globalNumber=0;
@@ -171,6 +273,8 @@ class MusicItem{
         globalNumber++;
     }
 }
+
+
 
 class MusicDatabase{
     public static MusicItem[] items = new MusicItem[10];

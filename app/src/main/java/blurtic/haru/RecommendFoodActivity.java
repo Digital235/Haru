@@ -32,18 +32,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RecommendMovieActivity extends AppCompatActivity {
+public class RecommendFoodActivity extends AppCompatActivity {
     ViewGroup layout;
     ImageView weatherIcon;
     TextView weatherMessage;
 
-    ArrayList<MovieItem> movieArray;
+    ArrayList<FoodItem> foodArray;
     int currentWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommand_movie);
+        setContentView(R.layout.activity_recommend_food);
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -51,8 +51,8 @@ public class RecommendMovieActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        weatherIcon = (ImageView) findViewById(R.id.img_movieweather);
-        weatherMessage = (TextView) findViewById(R.id.txt_movieweather);
+        weatherIcon = (ImageView) findViewById(R.id.img_foodweather);
+        weatherMessage = (TextView) findViewById(R.id.txt_foodweather);
         layout = (ViewGroup) findViewById(R.id.root_layout);
 
         weatherMessage.setText("데이터를 받아오는 중입니다.");
@@ -111,21 +111,21 @@ public class RecommendMovieActivity extends AppCompatActivity {
     }
 
     public void initialize(){
-        movieArray = new ArrayList<MovieItem>();
+        foodArray = new ArrayList<FoodItem>();
 
         Intent intent = getIntent();
         currentWeather = intent.getExtras().getInt("weather");
         setWeather(currentWeather);
 
-        MovieItem.globalNumber = 0;
+        FoodItem.globalNumber = 0;
         for (int i = 0; i < 10; i++) {
-            if (MovieDatabase.items[i] != null) {
-                movieArray.add(MovieDatabase.items[i]);
+            if (FoodDatabase.items[i] != null) {
+                foodArray.add(FoodDatabase.items[i]);
             }
         }
 
-        for (int i = 0; i < movieArray.size(); i++) {
-            addRow(movieArray.get(i));
+        for (int i = 0; i < foodArray.size(); i++) {
+            addRow(foodArray.get(i));
         }
     }
 
@@ -137,7 +137,7 @@ public class RecommendMovieActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
     }
 
-    void addRow(MovieItem mov) {
+    void addRow(FoodItem mov) {
         View item = LayoutInflater.from(this).inflate(R.layout.recommend_listitem, null);
         TextView titleView = (TextView) item.findViewById(R.id.txt_recommendinfo2);
         TextView genreView = (TextView) item.findViewById(R.id.txt_recommendinfo1);
@@ -157,8 +157,8 @@ public class RecommendMovieActivity extends AppCompatActivity {
                 colorAnim.setEvaluator(new ArgbEvaluator());
                 colorAnim.start();
 
-                AlertDialog.Builder ab = new AlertDialog.Builder(RecommendMovieActivity.this);
-                final WebView webView = new WebView(RecommendMovieActivity.this);
+                AlertDialog.Builder ab = new AlertDialog.Builder(RecommendFoodActivity.this);
+                final WebView webView = new WebView(RecommendFoodActivity.this);
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -174,7 +174,7 @@ public class RecommendMovieActivity extends AppCompatActivity {
             }
         });
         final ImageView likeButton = (ImageView) item.findViewById(R.id.bt_like);
-        if (movieArray.get(movNumber).favorite) {
+        if (foodArray.get(movNumber).favorite) {
             likeButton.setImageResource(R.drawable.ic_heart2);
         } else {
             likeButton.setImageResource(R.drawable.ic_heart1);
@@ -189,14 +189,14 @@ public class RecommendMovieActivity extends AppCompatActivity {
                 colorAnim.setEvaluator(new ArgbEvaluator());
                 colorAnim.start();
 
-                if (movieArray.get(number).favorite) {
-                    movieArray.get(number).favorite = false;
+                if (foodArray.get(number).favorite) {
+                    foodArray.get(number).favorite = false;
                     button.setImageResource(R.drawable.ic_heart1);
-                    Toast.makeText(RecommendMovieActivity.this, "해당 영화에 '좋아요'를 해제하였습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RecommendFoodActivity.this, "해당 영화에 '좋아요'를 해제하였습니다.", Toast.LENGTH_SHORT).show();
                 } else {
-                    movieArray.get(number).favorite = true;
+                    foodArray.get(number).favorite = true;
                     button.setImageResource(R.drawable.ic_heart2);
-                    Toast.makeText(RecommendMovieActivity.this, "해당 영화에 '좋아요'를 설정하였습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RecommendFoodActivity.this, "해당 영화에 '좋아요'를 설정하였습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -249,7 +249,7 @@ public class RecommendMovieActivity extends AppCompatActivity {
     }
 }
 
-class MovieItem {
+class FoodItem {
     static int globalNumber = 0;
     int number;
     String genre;
@@ -257,7 +257,7 @@ class MovieItem {
     String url;
     boolean favorite;
 
-    MovieItem(String g, String t, String u) {
+    FoodItem(String g, String t, String u) {
         number = globalNumber;
         genre = g;
         title = t;
@@ -267,20 +267,20 @@ class MovieItem {
     }
 }
 
-class MovieDatabase {
-    public static MovieItem[] items = new MovieItem[10];
+class FoodDatabase {
+    public static FoodItem[] items = new FoodItem[10];
 
     static {
-        items[0] = new MovieItem("판타지, 미스터리", "미스 페레그린과 이상한 아이들의 집", "https://m.map.naver.com/search2/search.nhn?query=%EB%B3%BC%EB%A7%81%EC%9E%A5&siteSort=1&sm=clk");
-        items[1] = new MovieItem("공포, 스릴러", "맨 인 더 다크", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=144944");
-        items[2] = new MovieItem("범죄, 액션", "아수라", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=44913");
-        items[3] = new MovieItem("코미디, 멜로", "브리짓 존스의 베이비", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=143456");
-        items[4] = new MovieItem("드라마", "설리: 허드슨강의 기적", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=143495");
-        items[5] = new MovieItem("액션", "밀정", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=137952");
-        items[6] = new MovieItem("드라마", "그물", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=149174");
-        items[7] = new MovieItem("모험, 판타지", "피터와 드래곤", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=134847");
-        items[8] = new MovieItem("드라마", "죽여주는 여자", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=146508");
-        items[9] = new MovieItem("애니메이션, 모험", "바다 탐험대 옥토넛 시즌4: 늪지탐험선K", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=149505");
+        items[0] = new FoodItem("판타지, 미스터리", "미스 페레그린과 이상한 아이들의 집", "https://m.map.naver.com/search2/search.nhn?query=%EB%B3%BC%EB%A7%81%EC%9E%A5&siteSort=1&sm=clk");
+        items[1] = new FoodItem("공포, 스릴러", "맨 인 더 다크", "http://food.naver.com/food/bi/mi/basic.nhn?code=144944");
+        items[2] = new FoodItem("범죄, 액션", "아수라", "http://food.naver.com/food/bi/mi/basic.nhn?code=44913");
+        items[3] = new FoodItem("코미디, 멜로", "브리짓 존스의 베이비", "http://food.naver.com/food/bi/mi/basic.nhn?code=143456");
+        items[4] = new FoodItem("드라마", "설리: 허드슨강의 기적", "http://food.naver.com/food/bi/mi/basic.nhn?code=143495");
+        items[5] = new FoodItem("액션", "밀정", "http://food.naver.com/food/bi/mi/basic.nhn?code=137952");
+        items[6] = new FoodItem("드라마", "그물", "http://food.naver.com/food/bi/mi/basic.nhn?code=149174");
+        items[7] = new FoodItem("모험, 판타지", "피터와 드래곤", "http://food.naver.com/food/bi/mi/basic.nhn?code=134847");
+        items[8] = new FoodItem("드라마", "죽여주는 여자", "http://food.naver.com/food/bi/mi/basic.nhn?code=146508");
+        items[9] = new FoodItem("애니메이션, 모험", "바다 탐험대 옥토넛 시즌4: 늪지탐험선K", "http://food.naver.com/food/bi/mi/basic.nhn?code=149505");
     }
 }
 

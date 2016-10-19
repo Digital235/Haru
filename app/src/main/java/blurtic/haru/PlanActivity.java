@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.BaseSwipListAdapter;
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -63,17 +64,24 @@ public class PlanActivity extends AppCompatActivity {
                         EditText edit_hour = (EditText) dialogView.findViewById(R.id.edit_hour);
                         EditText edit_minute = (EditText) dialogView.findViewById(R.id.edit_minute);
                         try {
-                            planItemList.add(new PlanItem(Integer.parseInt(edit_hour.getText().toString()),
-                                    Integer.parseInt(edit_minute.getText().toString()),
-                                    edit_name.getText().toString()));
-                            Collections.sort(planItemList);
-                            mListView.deferNotifyDataSetChanged();
-                            savePlanToFile();
-                            edit_name.setText("");
-                            edit_hour.setText("");
-                            edit_minute.setText("");
+                            int hour=Integer.parseInt(edit_hour.getText().toString());
+                            int minute=Integer.parseInt(edit_minute.getText().toString());
+                            if(hour<24 && minute<60) {
+                                planItemList.add(new PlanItem(hour, minute, edit_name.getText().toString()));
+                                Collections.sort(planItemList);
+                                mListView.deferNotifyDataSetChanged();
+                                savePlanToFile();
+                                edit_name.setText("");
+                                edit_hour.setText("");
+                                edit_minute.setText("");
+                            }
+                            else{
+                                Toast.makeText(PlanActivity.this, "시간을 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        catch(Exception e){}
+                        catch(Exception e){
+                            Toast.makeText(PlanActivity.this, "시간을 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );
@@ -104,22 +112,22 @@ public class PlanActivity extends AppCompatActivity {
 
             @Override
             public void create(SwipeMenu menu) {
-                // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getApplicationContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(dp2px(70));
-                // set item title
-                openItem.setTitle("수정");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
+//                // create "open" item
+//                SwipeMenuItem openItem = new SwipeMenuItem(
+//                        getApplicationContext());
+//                // set item background
+//                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+//                        0xCE)));
+//                // set item width
+//                openItem.setWidth(dp2px(70));
+//                // set item title
+//                openItem.setTitle("수정");
+//                // set item title fontsize
+//                openItem.setTitleSize(18);
+//                // set item title font color
+//                openItem.setTitleColor(Color.WHITE);
+//                // add to menu
+//                menu.addMenuItem(openItem);
 
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
@@ -149,10 +157,10 @@ public class PlanActivity extends AppCompatActivity {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 //Toast.makeText(PlanActivity.this, ""+position+index, Toast.LENGTH_SHORT).show();
                 switch (index) {
+//                    case 0:
+//                        // open
+//                        break;
                     case 0:
-                        // open
-                        break;
-                    case 1:
                         planItemList.remove(position);
                         mAdapter.notifyDataSetChanged();
                         savePlanToFile();

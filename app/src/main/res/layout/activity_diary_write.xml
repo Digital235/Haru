@@ -85,13 +85,26 @@
             android:text="오늘의 To Do List"
             android:id="@+id/textView9"
             android:textColor="#ffffff"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
+            android:textSize="20sp"
+            android:gravity="center" />
 
         <com.baoyz.swipemenulistview.SwipeMenuListView
             android:id="@+id/planListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오늘의 좋아요"
+            android:id="@+id/textView10"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_gravity="center" />
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/likeListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />

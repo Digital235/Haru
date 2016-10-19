@@ -9,10 +9,10 @@ public class WeatherToTime {
     public String type = "";
     public String value = "";
 
-    String categoryName[] = {"POP","PTY","REH","SKY","UUU","VVV","VEC","WSD","T3H"};
-    String categoryValue[] = {"","","","","","","","",""}; // 최종 결과값임
-    String categoryChangeVal[] = {"","","","","","","","",""};
-    boolean categoryCheck[] = {false,false,false,false,false,false,false,false,false};
+    public String categoryName[] = {"POP","PTY","REH","SKY","UUU","VVV","VEC","WSD","T3H"};
+    public String categoryValue[] = {"","","","","","","","",""}; // 최종 결과값임
+    public String categoryChangeVal[] = {"","","","","","","","",""};
+    public boolean categoryCheck[] = {false,false,false,false,false,false,false,false,false,false,false};
     //온도 날씨만
     public WeatherToTime(String date, String time, String type, String value) {
         this.date = date;

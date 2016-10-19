@@ -74,7 +74,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
                         android:id="@+id/txt_currentTemp"
                         android:layout_gravity="center"
                         android:textColor="#ffffff"
@@ -84,7 +83,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="요약\n요약"
+                    android:text="날씨정보를 받는데 실패했습니다."
                     android:id="@+id/txt_todaysummery"
                     android:textColor="#ffffff"
                     android:textIsSelectable="false"
@@ -133,7 +132,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="날씨 상세정보 영역\n내용\n내용\n내용\n내용"
                     android:id="@+id/txt_todayweather_detail"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
@@ -221,6 +219,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:id="@+id/horizontal_line5"
+                android:background="#ffffff" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="#c8000000"
+                android:id="@+id/recommend_food" >
+
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/img_food"
+                    android:src="@drawable/food"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="오늘의 먹거리"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/textView11"
+                    android:textSize="23sp"
+                    android:textColor="#ffffff"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/textView12"
                 android:background="#ffffff" />
 
         </LinearLayout>

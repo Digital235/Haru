@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import org.androidconnect.listview.horizontal.adapter.HorizontalListView;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,8 +41,8 @@ import blurtic.haru.APISet.Weather.Manager.URLConnectionManager;
 import blurtic.haru.APISet.Weather.Message.HandlerMessage;
 
 public class MainActivity extends AppCompatActivity {
-    int currentWeather;
-    int currentTemp;
+    int currentWeather=0;
+    float currentTemp=0;
     ArrayList<TimeWeatherItem> timeWeatherItemList = new ArrayList<TimeWeatherItem>();
     ImageView todayWeatherIcon;
     TextView todayTemp;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     TextView todayDetail;
     FrameLayout recommendMovie;
     FrameLayout recommendMusic;
+    FrameLayout recommendFood;
+    HorizontalListView timeWeatherListView;
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
@@ -73,9 +78,10 @@ public class MainActivity extends AppCompatActivity {
         todayDate = (TextView)findViewById(R.id.txt_date);
         todayDetail = (TextView)findViewById(R.id.txt_todayweather_detail);
         final LinearLayout layout_TodayDetail = (LinearLayout)findViewById(R.id.layout_today_detail);
-        HorizontalListView timeWeatherListView = (HorizontalListView) findViewById(R.id.listview_timeweather);
+        timeWeatherListView = (HorizontalListView) findViewById(R.id.listview_timeweather);
         recommendMovie = (FrameLayout)findViewById(R.id.recommend_movie);
         recommendMusic = (FrameLayout)findViewById(R.id.recommend_music);
+        recommendFood = (FrameLayout)findViewById(R.id.recommend_food);
 
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item1);
@@ -158,6 +164,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        recommendFood.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ValueAnimator colorAnim = ObjectAnimator.ofInt(v, "backgroundColor", Color.WHITE, Color.parseColor("#c8000000"));
+                colorAnim.setDuration(300);
+                colorAnim.setEvaluator(new ArgbEvaluator());
+                colorAnim.start();
+
+                // Toast.makeText(MainActivity.this, "music", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this,RecommendFoodActivity.class);
+                intent.putExtra("weather", currentWeather);
+                startActivity(intent);
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+            }
+        });
+
         bt_Detail.setOnClickListener(onDetailClicked);
         layout_TodayDetail.setVisibility(View.GONE);
 
@@ -165,34 +186,32 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyy년 M월 d일");
         todayDate.setText(df.format(c.getTime()));
 
-        setTodaySummery(14, 24);
+        loadLikes();
+    }
 
-
-
-        timeWeatherItemList.add(new TimeWeatherItem(3, 1, 14));
-        timeWeatherItemList.add(new TimeWeatherItem(6, 1, 14));
-        timeWeatherItemList.add(new TimeWeatherItem(9, 1, 16));
-        timeWeatherItemList.add(new TimeWeatherItem(12, 1, 21));
-        timeWeatherItemList.add(new TimeWeatherItem(15, 1, 24));
-        timeWeatherItemList.add(new TimeWeatherItem(18, 0, 20));
-        timeWeatherItemList.add(new TimeWeatherItem(21, 0, 18));
-        timeWeatherItemList.add(new TimeWeatherItem(24, 0, 15));
-        todayDetail.setText("강수확률 : 20%\n\n풍향 : 남동\n풍속 : 2 (m/s)\n\n" + "습도 : 61%\n\n식중독지수 : 29 (관심) \n자외선지수 : 3 (보통)");
-
-        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        currentWeather=timeWeatherItemList.get(timeWeatherItemList.size()-1).weather;
-        currentTemp=timeWeatherItemList.get(timeWeatherItemList.size()-1).temp;
-        for(int i=1; i<timeWeatherItemList.size(); i++){
-            if(timeWeatherItemList.get(i).time>currentHour) {
-                currentWeather = timeWeatherItemList.get(i - 1).weather;
-                currentWeather = timeWeatherItemList.get(i - 1).temp;
-                break;
+    void loadLikes(){
+        String filename="l"+stringifyDate();
+        try {
+            File file = getFileStreamPath(filename);
+            if(file == null || !file.exists()) {
+                return;
             }
-        }
-        setWeatherImage(todayWeatherIcon, currentWeather);
-        todayTemp.setText(Integer.toString(currentTemp)+"℃");
+            Log.d("test","fileexist" );
+            FileInputStream fis = openFileInput(filename);
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
 
-        timeWeatherListView.setAdapter(new HAdapter());
+           LikeJsonParser.fromJson(new String(data));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String stringifyDate(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        return df.format(c.getTime());
     }
 
     void setWeatherImage(ImageView image, int weather){
@@ -200,6 +219,8 @@ public class MainActivity extends AppCompatActivity {
         else if(weather==1)image.setImageResource(R.mipmap.icon_cloud);
         else if(weather==2)image.setImageResource(R.mipmap.icon_rain);
         else if(weather==3)image.setImageResource(R.mipmap.icon_thunder);
+        else if(weather==4)image.setImageResource(R.mipmap.icon_gurum);
+        else if(weather==5)image.setImageResource(R.mipmap.icon_snow);
     }
 
     void setTodaySummery(int min, int max){
@@ -209,9 +230,14 @@ public class MainActivity extends AppCompatActivity {
     class TimeWeatherItem{
         int time;
         int weather;
-        int temp;
+        float temp;
 
         TimeWeatherItem(int t, int w, int t2){
+            time=t;
+            weather=w;
+            temp=(float)t2;
+        }
+        TimeWeatherItem(int t, int w, float t2){
             time=t;
             weather=w;
             temp=t2;
@@ -328,6 +354,75 @@ public class MainActivity extends AppCompatActivity {
 //                                + mTotal.mDayWeather.get(i).minTemp + "\r\n";
 //                    }
                    // tv_totalRead.setText(data);
+                    if(mTime.size()>0) {
+                        int tempMax=-9999;
+                        int tempMin=9999;
+                        int skyCode=Integer.parseInt(mTime.get(0).categoryValue[3]);
+                        int ptyCode=Integer.parseInt(mTime.get(0).categoryValue[1]);
+                        String sky=null;
+                        String pty=null;
+                        if(skyCode==1)sky="맑음";
+                        else if(skyCode==2)sky="구름조금";
+                        else if(skyCode==3)sky="구름많음";
+                        else if(skyCode==4)sky="흐림";
+
+                        if(ptyCode==0)pty="없음";
+                        if(ptyCode==1)pty="비";
+                        if(ptyCode==2)pty="진눈개비";
+                        if(ptyCode==3)pty="눈";
+                        todayDetail.setText(
+                                "하늘상태 : " + sky + "\n" +
+                                "강수형태 : " + pty + "\n" +
+                                "강수확률 : " + mTime.get(0).categoryValue[0] + "%\n\n" +
+                                "풍속(동서) : " + mTime.get(0).categoryValue[4] + "m/s\n" +
+                                "풍속(남북) : " + mTime.get(0).categoryValue[5] + "m/s\n" +
+                                "풍향 : " + mTime.get(0).categoryValue[6] + "\n\n" +
+                                "습도 : " + mTime.get(0).categoryValue[2] + "%"
+                        );
+                        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+                        if(ptyCode==2 || ptyCode==3)currentWeather = 5;
+                        else if(ptyCode == 1)currentWeather=2;
+                        else if(skyCode == 1)currentWeather = 0;
+                        else if(skyCode == 2 || skyCode == 3)currentWeather = 4;
+                        else if(skyCode == 4)currentWeather = 1;
+
+                        currentTemp = Float.parseFloat(mTime.get(0).categoryValue[8]);
+                        for (int i = 1; i < timeWeatherItemList.size(); i++) {
+                            if (timeWeatherItemList.get(i).time > currentHour) {
+                                currentWeather = timeWeatherItemList.get(i - 1).weather;
+                                currentTemp = timeWeatherItemList.get(i - 1).temp;
+                                break;
+                            }
+                        }
+                        setWeatherImage(todayWeatherIcon, currentWeather);
+                        todayTemp.setText(Float.toString(currentTemp) + "℃");
+
+                        for(int i=0; i<mTime.size(); i++){
+                            WeatherToTime data = mTime.get(i);
+                            int time=Integer.parseInt(data.time.substring(0, 2));
+
+                            int skyCodeTime=Integer.parseInt(data.categoryValue[3]);
+                            int ptyCodeTime=Integer.parseInt(data.categoryValue[1]);
+
+                            int weather=0;
+                            if(ptyCodeTime==2 || ptyCodeTime==3)weather = 5;
+                            else if(ptyCodeTime == 1)weather=2;
+                            else if(skyCodeTime == 1)weather = 0;
+                            else if(skyCodeTime == 2 || skyCodeTime == 3)weather = 4;
+                            else if(skyCodeTime == 4)weather = 1;
+
+                            float temp=0;
+                            temp = Float.parseFloat(data.categoryValue[8]);
+                            if((int)temp < tempMin)tempMin=(int)temp;
+                            if((int)temp > tempMax)tempMax=(int)temp;
+
+                            timeWeatherItemList.add(new TimeWeatherItem(time, weather, temp));
+                        }
+                        timeWeatherListView.setAdapter(new HAdapter());
+
+                        setTodaySummery(tempMin, tempMax);
+                    }
             }
         }
     };

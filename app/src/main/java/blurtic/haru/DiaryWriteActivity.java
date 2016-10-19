@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.baoyz.swipemenulistview.BaseSwipListAdapter;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
+import org.json.JSONArray;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,11 +27,14 @@ import java.util.ArrayList;
 public class DiaryWriteActivity extends AppCompatActivity {
     private ArrayList<PlanItem> planItemList=null;
     private AppAdapter mAdapter;
-    private SwipeMenuListView mListView;
+    private LikeAdapter mLikeAdapter;
+    private SwipeMenuListView mPlanListView;
+    private SwipeMenuListView mLikeListView;
     private TextView okButton;
     private TextView todayDate;
     private String dateString;
     private EditText diaryContent;
+    private JSONArray likeJson=null;
 
     private DiaryItem diaryItem=null;
 
@@ -60,6 +66,7 @@ public class DiaryWriteActivity extends AppCompatActivity {
 
         loadDiaryFromFile(dateString);
         loadPlanFromFile(dateString);
+        loadLikes(dateString);
 
         if(diaryItem!=null){
             diaryContent.setText(diaryItem.getContent());
@@ -68,9 +75,15 @@ public class DiaryWriteActivity extends AppCompatActivity {
             diaryItem=new DiaryItem();
         }
         if(planItemList!=null) {
-            mListView = (SwipeMenuListView) findViewById(R.id.planListView);
+            mPlanListView = (SwipeMenuListView) findViewById(R.id.planListView);
             mAdapter = new AppAdapter();
-            mListView.setAdapter(mAdapter);
+            mPlanListView.setAdapter(mAdapter);
+        }
+
+        if(likeJson!=null) {
+            mLikeListView = (SwipeMenuListView) findViewById(R.id.likeListView);
+            mLikeAdapter = new LikeAdapter();
+            mLikeListView.setAdapter(mLikeAdapter);
         }
     }
 
@@ -145,6 +158,76 @@ public class DiaryWriteActivity extends AppCompatActivity {
         }
     }
 
+    class LikeAdapter extends BaseSwipListAdapter {
+        @Override
+        public int getCount() {
+            return likeJson.length();
+        }
+
+        @Override
+        public PlanItem getItem(int position) {
+            return planItemList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = View.inflate(getApplicationContext(),
+                        R.layout.planlist_item, null);
+                new ViewHolder(convertView);
+            }
+            final ViewHolder holder = (ViewHolder) convertView.getTag();
+            //PlanItem item = getItem(position);
+            int index=0;
+            try {
+                index = likeJson.getInt(position);
+            }
+            catch(Exception e)
+            {}
+
+            if(index>=1000 && index <2000){
+                holder.nameView.setText(MovieDatabase.items[index-1000].title);
+                holder.checkImage.setImageResource(R.drawable.movie);
+                holder.timeView.setText("영화");
+            }
+            else if(index>=2000 && index <3000){
+                holder.nameView.setText(MusicDatabase.items[index-2000].title);
+                holder.checkImage.setImageResource(R.drawable.cd_music);
+                holder.timeView.setText("음악");
+            }
+            else if(index >=3000 && index<4000){
+                holder.nameView.setText(FoodDatabase.items[index-3000].title);
+                holder.checkImage.setImageResource(R.drawable.food);
+                holder.timeView.setText("먹거리");
+            }
+
+
+            return convertView;
+        }
+
+        class ViewHolder {
+            ImageView checkImage;
+            TextView timeView;
+            TextView nameView;
+            LinearLayout infoView;
+            LinearLayout background;
+
+            public ViewHolder(View view) {
+                checkImage = (ImageView) view.findViewById(R.id.img_check);
+                timeView = (TextView) view.findViewById(R.id.txt_time);
+                nameView = (TextView) view.findViewById(R.id.txt_name);
+                infoView = (LinearLayout) view.findViewById(R.id.layout_planInfo);
+                background = (LinearLayout) view.findViewById(R.id.layout_background);
+                view.setTag(this);
+            }
+        }
+    }
+
     private void loadPlanFromFile(String dateSting){
         String filename="p"+dateSting;
         try {
@@ -175,6 +258,25 @@ public class DiaryWriteActivity extends AppCompatActivity {
             fis.read(data);
 
             diaryItem = DiaryItem.fromJson(new String(data));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void loadLikes(String dateSting){
+        String filename="l"+dateSting;
+        try {
+            File file = getFileStreamPath(filename);
+            if(file == null || !file.exists()) {
+                return;
+            }
+            Log.d("test", "fileexist");
+            FileInputStream fis = openFileInput(filename);
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+
+            likeJson = new JSONArray(new String(data));
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -122,6 +122,7 @@ public class URLConnectionManager extends Thread{
 
         String resultUrl = "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?ServiceKey" +
         "=msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date="+ currentDay +"&base_time=" + time + "&nx=55&ny=127&numOfRows=300";
+        Log.d("url",resultUrl);
         return resultUrl;
     }
 
@@ -337,6 +338,8 @@ public class URLConnectionManager extends Thread{
         - fcstValue
         x
         y
+
+
      */
     ArrayList<SpaceTimeCategory> RequestURL_CurrentTimeInfo(String urlData)
     {
@@ -501,14 +504,34 @@ public class URLConnectionManager extends Thread{
                 (mCurrentTimeAndDay.get(DAY));
          String st_date1 = cur_date; // + 0 일
 
-        //String test_data = "20161014";
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorrow = calendar.getTime();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+        String todayAsString = dateFormat.format(today);
+        String tomorrowAsString = dateFormat.format(tomorrow);
+
+        String dateString;
+        if(hour<21) dateString=todayAsString;
+        else dateString = tomorrowAsString;
+
+//        System.out.println(todayAsString);
+//        System.out.println(tomorrowAsString);
+
+        //String test_data = "20161019";
         for(int i = 0 ; i < mTime.size(); i++)
         {
             //내부적 루프 돌아서 다넣는 식,
 
             WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
-            if(st_date1.equals(mTime.get(i).fcstDate))
+            //if(st_date1.equals(mTime.get(i).fcstDate))
             //if(test_data.equals(mTime.get(i).fcstDate))
+            if(dateString.equals(mTime.get(i).fcstDate))
             {
                 for(int j = i; j < mTime.size(); i++,j++)
                 {
