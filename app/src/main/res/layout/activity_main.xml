@@ -300,15 +300,15 @@
         android:layout_gravity="right"
         android:layout_marginTop="3dp">
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/floating_action_menu_item3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_setting"
-            fab:fab_colorNormal="#368bda"
-            fab:fab_colorPressed="#4398e7"
-            fab:fab_size="normal"
-            fab:fab_label="설정" />
+        <!--<com.github.clans.fab.FloatingActionButton-->
+            <!--android:id="@+id/floating_action_menu_item3"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_setting"-->
+            <!--fab:fab_colorNormal="#368bda"-->
+            <!--fab:fab_colorPressed="#4398e7"-->
+            <!--fab:fab_size="normal"-->
+            <!--fab:fab_label="설정" />-->
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/floating_action_menu_item2"

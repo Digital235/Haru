@@ -31,6 +31,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class RecommendMovieActivity extends AppCompatActivity {
     ViewGroup layout;
@@ -118,13 +119,36 @@ public class RecommendMovieActivity extends AppCompatActivity {
         setWeather(currentWeather);
 
         MovieItem.globalNumber = 0;
-        for (int i = 0; i < 10; i++) {
-            if (MovieDatabase.items[i] != null) {
-                movieArray.add(MovieDatabase.items[i]);
+        movieArray.clear();
+
+        ArrayList<Integer> shuffleList= new ArrayList<Integer>();
+
+        if(currentWeather==1 || currentWeather == 4){//흐림 13~25
+            for(int i=13; i<26; i++){
+                shuffleList.add(i);
+            }
+        }
+        else if(currentWeather==2 || currentWeather == 3){//비 26~38
+            for(int i=26; i<39; i++){
+                shuffleList.add(i);
+            }
+        }
+        else{//맑음, 기타 0~12
+            for(int i=0; i<13; i++){
+                shuffleList.add(i);
             }
         }
 
-        for (int i = 0; i < movieArray.size(); i++) {
+        Collections.shuffle(shuffleList);
+
+        for (int i = 0; i < 10; i++) {
+            if (MovieDatabase.items[shuffleList.get(i)] != null) {
+                MovieDatabase.items[shuffleList.get(i)].count();
+                movieArray.add(MovieDatabase.items[shuffleList.get(i)]);
+            }
+        }
+
+        for (int i = 0; i < 10; i++) {
             addRow(movieArray.get(i));
         }
     }
@@ -167,6 +191,7 @@ public class RecommendMovieActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+                webView.getSettings().setJavaScriptEnabled(true);
                 webView.loadUrl(url);
                 ab.setView(webView);
                 ab.setPositiveButton("확인", null);
@@ -258,29 +283,62 @@ class MovieItem {
     boolean favorite;
 
     MovieItem(String g, String t, String u) {
-        number = globalNumber;
         genre = g;
         title = t;
         url = u;
         favorite = false;
+    }
+    void count(){
+        number=globalNumber;
         globalNumber++;
     }
 }
 
 class MovieDatabase {
-    public static MovieItem[] items = new MovieItem[10];
+    public static MovieItem[] items = new MovieItem[39];
 
     static {
-        items[0] = new MovieItem("판타지, 미스터리", "미스 페레그린과 이상한 아이들의 집", "https://m.map.naver.com/search2/search.nhn?query=%EB%B3%BC%EB%A7%81%EC%9E%A5&siteSort=1&sm=clk");
-        items[1] = new MovieItem("공포, 스릴러", "맨 인 더 다크", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=144944");
-        items[2] = new MovieItem("범죄, 액션", "아수라", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=44913");
-        items[3] = new MovieItem("코미디, 멜로", "브리짓 존스의 베이비", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=143456");
-        items[4] = new MovieItem("드라마", "설리: 허드슨강의 기적", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=143495");
-        items[5] = new MovieItem("액션", "밀정", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=137952");
-        items[6] = new MovieItem("드라마", "그물", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=149174");
-        items[7] = new MovieItem("모험, 판타지", "피터와 드래곤", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=134847");
-        items[8] = new MovieItem("드라마", "죽여주는 여자", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=146508");
-        items[9] = new MovieItem("애니메이션, 모험", "바다 탐험대 옥토넛 시즌4: 늪지탐험선K", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=149505");
+        items[0] = new MovieItem("애니메이션, 모험, 가족","드림 쏭","http://movie.naver.com/movie/bi/mi/basic.nhn?code=133447");
+        items[1] = new MovieItem("판타지, 미스터리", "미스 페레그린과 이상한 아이들의 집", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=129383");
+        items[2] = new MovieItem("미스터리, 스릴러","인페르노","http://movie.naver.com/movie/bi/mi/basic.nhn?code=129461");
+        items[3] = new MovieItem("액션, 스릴러","어카운턴트","http://movie.naver.com/movie/bi/mi/basic.nhn?code=134859");
+        items[4] = new MovieItem("코미디","럭키","http://movie.naver.com/movie/bi/mi/basic.nhn?code=140695");
+        items[5] = new MovieItem("멜로/로맨스, 드라마","노트북","http://movie.naver.com/movie/bi/mi/basic.nhn?code=38899");
+        items[6] = new MovieItem("다큐멘터리","자백","http://movie.naver.com/movie/bi/mi/basic.nhn?code=146534");
+        items[7] = new MovieItem("드라마","걷기왕","http://movie.naver.com/movie/bi/mi/basic.nhn?code=145804");
+        items[8] = new MovieItem("드라마","비틀스: 에잇 데이즈 어 위크 - 투어링 이어즈","http://movie.naver.com/movie/bi/mi/basic.nhn?code=152266");
+        items[9] = new MovieItem("액션","바스티유 데이","http://movie.naver.com/movie/bi/mi/basic.nhn?code=137921");
+        items[10] = new MovieItem("코미디, 가족, 판타지","미스터 캣","http://movie.naver.com/movie/bi/mi/basic.nhn?code=137972");
+        items[11] = new MovieItem("모험, 판타지", "피터와 드래곤", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=134847");
+        items[12] = new MovieItem("코미디, 멜로", "브리짓 존스의 베이비", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=143456");
+        //
+        items[13] = new MovieItem("드라마", "설리: 허드슨강의 기적", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=143495");
+        items[14] = new MovieItem("액션", "밀정", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=137952");
+        items[15] = new MovieItem("드라마", "그물", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=149174");
+        items[16] = new MovieItem("드라마", "죽여주는 여자", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=146508");
+        items[17] = new MovieItem("애니메이션, 모험", "바다 탐험대 옥토넛 시즌4: 늪지탐험선K", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=149505");
+        items[18] = new MovieItem("애니메이션, 멜로/로맨스","예전부터 계속 좋아했어. ~고백실행위원회~","http://movie.naver.com/movie/bi/mi/basic.nhn?code=150338");
+        items[19] = new MovieItem("드라마","다가오는 것들","http://movie.naver.com/movie/bi/mi/basic.nhn?code=147945");
+        items[20] = new MovieItem("드라마, 애니메이션, 판타지","킹 오브 프리즘","http://movie.naver.com/movie/bi/mi/basic.nhn?code=152160");
+        items[21] = new MovieItem("코미디, 드라마, 멜로/로맨스","카페 소사이어티","http://movie.naver.com/movie/bi/mi/basic.nhn?code=136870");
+        items[22] = new MovieItem("드라마, 멜로/로맨스","립반윙클의 신부","http://movie.naver.com/movie/bi/mi/basic.nhn?code=150551");
+        items[23] = new MovieItem("코미디, 멜로/로맨스, 판타지","미드나잇 인 파리","http://movie.naver.com/movie/bi/mi/basic.nhn?code=74610");
+        items[24] = new MovieItem("공포, 스릴러", "맨 인 더 다크", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=144944");
+        items[25] = new MovieItem("드라마","비바","http://movie.naver.com/movie/bi/mi/basic.nhn?code=144290");
+        //
+        items[26] = new MovieItem("드라마, 판타지","우주의 크리스마스", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=142641");
+        items[27] = new MovieItem("드라마","설리: 허드슨강의 기적","http://movie.naver.com/movie/bi/mi/basic.nhn?code=143495");
+        items[28] = new MovieItem("드라마","그물","http://movie.naver.com/movie/bi/mi/basic.nhn?code=149174");
+        items[29] = new MovieItem("범죄, 스릴러, 미스터리","유주얼 서스펙트","http://movie.naver.com/movie/bi/mi/basic.nhn?code=17150");
+        items[30] = new MovieItem("다큐멘터리, 드라마","물숨","http://movie.naver.com/movie/bi/mi/basic.nhn?code=137841");
+        items[31] = new MovieItem("다큐멘터리"," 다음 침공은 어디?","http://movie.naver.com/movie/bi/mi/basic.nhn?code=142241");
+        items[32] = new MovieItem("드라마","태풍이 지나가고","http://movie.naver.com/movie/bi/mi/basic.nhn?code=146548");
+        items[33] = new MovieItem("액션, 스릴러","드라이브","http://movie.naver.com/movie/bi/mi/basic.nhn?code=80466");
+        items[34] = new MovieItem("다큐멘터리","연인과 독재자","http://movie.naver.com/movie/bi/mi/basic.nhn?code=146193");
+        items[35] = new MovieItem("액션, 모험, 드라마, 공포, 스릴러","디시에르토","http://movie.naver.com/movie/bi/mi/basic.nhn?code=120581");
+        items[36] = new MovieItem("SF, 스릴러, 액션","칠드런 오브 맨","http://movie.naver.com/movie/bi/mi/basic.nhn?code=63113");
+        items[37] = new MovieItem("범죄, 액션", "아수라", "http://movie.naver.com/movie/bi/mi/basic.nhn?code=44913");
+        items[38] = new MovieItem("드라마","우리들","http://movie.naver.com/movie/bi/mi/basic.nhn?code=146504");
     }
 }
 

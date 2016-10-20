@@ -31,6 +31,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class RecommendMusicActivity extends AppCompatActivity {
     ViewGroup layout;
@@ -117,15 +118,37 @@ public class RecommendMusicActivity extends AppCompatActivity {
         currentWeather = intent.getExtras().getInt("weather");
         setWeather(currentWeather);
 
-        MusicItem.globalNumber=0;
-        MovieItem.globalNumber=0;
-        for(int i=0; i<10; i++){
-            if(MovieDatabase.items[i]!=null) {
-                musicArray.add(MusicDatabase.items[i]);
+        MusicItem.globalNumber = 0;
+        musicArray.clear();
+
+        ArrayList<Integer> shuffleList= new ArrayList<Integer>();
+
+        if(currentWeather==1 || currentWeather == 4){//흐림 13~25
+            for(int i=13; i<26; i++){
+                shuffleList.add(i);
+            }
+        }
+        else if(currentWeather==2 || currentWeather == 3){//비 26~38
+            for(int i=26; i<39; i++){
+                shuffleList.add(i);
+            }
+        }
+        else{//맑음, 기타 0~12
+            for(int i=0; i<13; i++){
+                shuffleList.add(i);
             }
         }
 
-        for(int i=0; i<musicArray.size(); i++){
+        Collections.shuffle(shuffleList);
+
+        for (int i = 0; i < 10; i++) {
+            if (MusicDatabase.items[shuffleList.get(i)] != null) {
+                MusicDatabase.items[shuffleList.get(i)].count();
+                musicArray.add(MusicDatabase.items[shuffleList.get(i)]);
+            }
+        }
+
+        for (int i = 0; i < 10; i++) {
             addRow(musicArray.get(i));
         }
     }
@@ -167,6 +190,7 @@ public class RecommendMusicActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+                webView.getSettings().setJavaScriptEnabled(true);
                 webView.loadUrl(url);
                 ab.setView(webView);
                 ab.setPositiveButton("확인", null);
@@ -265,11 +289,14 @@ class MusicItem{
     boolean favorite;
 
     MusicItem(String g, String t, String u){
-        number=globalNumber;
         genre=g;
         title=t;
         url=u;
         favorite=false;
+    }
+
+    void count(){
+        number=globalNumber;
         globalNumber++;
     }
 }
@@ -277,17 +304,48 @@ class MusicItem{
 
 
 class MusicDatabase{
-    public static MusicItem[] items = new MusicItem[10];
+    public static MusicItem[] items = new MusicItem[39];
     static{
         items[0]=new MusicItem("볼빨간사춘기","우주를 줄게","http://www.melon.com/album/detail.htm?albumId=2707131");
         items[1]=new MusicItem("박효신","숨","http://www.melon.com/album/detail.htm?albumId=10001952");
         items[2]=new MusicItem("임창정","내가 저지른 사랑","http://www.melon.com/album/detail.htm?albumId=2708957");
-        items[3]=new MusicItem("한동근", "이 소설의 끝을 다시 써보려 해", "http://www.melon.com/album/detail.htm?albumId=2284064");
+        items[3]=new MusicItem("박경 (블락비)","자격지심 (Feat. 은하 Of 여자친구)","http://www.melon.com/album/detail.htm?albumId=2685311");
         items[4]=new MusicItem("Red Velvet (레드벨벳)", "러시안 룰렛 (Russian Roulette)", "http://www.melon.com/album/detail.htm?albumId=2709585");
         items[5]=new MusicItem("한동근", "그대라는 사치", "http://www.melon.com/album/detail.htm?albumId=2706226");
         items[6]=new MusicItem("유재석, EXO", "Dancing King", "http://www.melon.com/album/detail.htm?albumId=2711209");
-        items[7]=new MusicItem("어반자카파", "목요일 밤 (Feat. 빈지노)", "http://www.melon.com/album/detail.htm?albumId=2705941");
+        items[7]=new MusicItem("TWICE (트와이스)","CHEER UP","http://www.melon.com/album/detail.htm?albumId=2681333");
         items[8]=new MusicItem("헤이즈 (Heize)", "돌아오지마 (Feat. 용준형 Of 비스트)", "http://www.melon.com/album/detail.htm?albumId=2679308");
         items[9]=new MusicItem("BLACKPINK", "휘파람", "http://www.melon.com/album/detail.htm?albumId=2703168");
+        items[10]=new MusicItem("인피니트","태풍 (The Eye)","http://www.melon.com/album/detail.htm?albumId=2711212");
+        items[11]=new MusicItem("엠씨더맥스","그대 그대 그대","http://www.melon.com/album/detail.htm?albumId=10004085");
+        items[12]=new MusicItem("여자친구","너 그리고 나 (NAVILLERA)","http://www.melon.com/album/detail.htm?albumId=2696751");
+        //
+        items[13]=new MusicItem("한동근", "이 소설의 끝을 다시 써보려 해", "http://www.melon.com/album/detail.htm?albumId=2284064");
+        items[14]=new MusicItem("어반자카파", "목요일 밤 (Feat. 빈지노)", "http://www.melon.com/album/detail.htm?albumId=2705941");
+        items[15]=new MusicItem("혁오 (hyukoh)","와리가리","http://www.melon.com/album/detail.htm?albumId=2320721");
+        items[16]=new MusicItem("자우림","스물다섯, 스물하나","http://www.melon.com/album/detail.htm?albumId=2210557");
+        items[17]=new MusicItem("MC그리","이불 밖은 위험해","http://www.melon.com/album/detail.htm?albumId=10004202");
+        items[18]=new MusicItem("김범수","사랑해요","http://www.melon.com/album/detail.htm?albumId=2702198");
+        items[19]=new MusicItem("10cm","길어야 5분","http://www.melon.com/album/detail.htm?albumId=10004832");
+        items[20]=new MusicItem("정준영","내가 너에게 가든 네가 나에게 오든","http://www.melon.com/album/detail.htm?albumId=2700037");
+        items[21]=new MusicItem("브리즈","뭐라할까","http://www.melon.com/album/detail.htm?albumId=873053");
+        items[22]=new MusicItem("웅산","아픔아","http://www.melon.com/album/detail.htm?albumId=10002979");
+        items[23]=new MusicItem("온유 (ONEW), 이진아","밤과 별의 노래 (Starry Night)","http://www.melon.com/album/detail.htm?albumId=2704058");
+        items[24]=new MusicItem("존박","네 생각","http://www.melon.com/album/detail.htm?albumId=2697716");
+        items[25]=new MusicItem("BewhY (비와이)","Forever (Prod. By GRAY)","http://www.melon.com/album/detail.htm?albumId=2695189");
+        //
+        items[26]=new MusicItem("Crush","어떻게 지내","http://www.melon.com/album/detail.htm?albumId=10006417");
+        items[27]=new MusicItem("방탄소년단","Stigma","http://www.melon.com/album/detail.htm?albumId=10004707");
+        items[28]=new MusicItem("에일리","Home (Feat. 윤미래)","http://www.melon.com/album/detail.htm?albumId=10003256");
+        items[29]=new MusicItem("DEAN","D (half moon) (Feat. 개코)","http://www.melon.com/album/detail.htm?albumId=2674623");
+        items[30]=new MusicItem("씨잼 (C Jamm), BewhY (비와이)","puzzle","http://www.melon.com/album/detail.htm?albumId=2703714");
+        items[31]=new MusicItem("BLACKPINK","붐바야","http://www.melon.com/album/detail.htm?albumId=2703168");
+        items[32]=new MusicItem("케이윌","녹는다","http://www.melon.com/album/detail.htm?albumId=2711241");
+        items[33]=new MusicItem("원더걸스","Why So Lonely","http://www.melon.com/album/detail.htm?albumId=2695552");
+        items[34]=new MusicItem("방탄소년단","불타오르네 (FIRE)","http://www.melon.com/album/detail.htm?albumId=2680573");
+        items[35]=new MusicItem("다비치","받는 사랑이 주는 사랑에게","http://www.melon.com/album/detail.htm?albumId=10005930");
+        items[36]=new MusicItem("정준일","안아줘","http://www.melon.com/album/detail.htm?albumId=2038488");
+        items[37]=new MusicItem("신용재 (포맨)","빌려줄게","http://www.melon.com/album/detail.htm?albumId=10005885");
+        items[38]=new MusicItem("국카스텐","Pulse","http://www.melon.com/album/detail.htm?albumId=2690346");
     }
 }

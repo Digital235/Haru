@@ -22,7 +22,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item2);
-        floatingActionButton3 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item3);
+//        floatingActionButton3 = (FloatingActionButton) findViewById(R.id.floating_action_menu_item3);
 
         mManager = new URLConnectionManager(this.getApplicationContext(),"",this);
         mManager.run();
@@ -111,12 +110,12 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
             }
         });
-        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "menu3", Toast.LENGTH_SHORT).show();
-                materialDesignFAM.close(false);
-            }
-        });
+//        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                Toast.makeText(MainActivity.this, "menu3", Toast.LENGTH_SHORT).show();
+//                materialDesignFAM.close(false);
+//            }
+//        });
 
         View.OnClickListener onDetailClicked = new View.OnClickListener() {
             public void onClick(View v) {
@@ -228,16 +227,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class TimeWeatherItem{
+        int date;
         int time;
         int weather;
         float temp;
 
-        TimeWeatherItem(int t, int w, int t2){
-            time=t;
-            weather=w;
-            temp=(float)t2;
-        }
-        TimeWeatherItem(int t, int w, float t2){
+//        TimeWeatherItem(int t, int w, int t2){
+//            time=t;
+//            weather=w;
+//            temp=(float)t2;
+//        }
+//        TimeWeatherItem(int t, int w, float t2){
+//            time=t;
+//            weather=w;
+//            temp=t2;
+//        }
+        TimeWeatherItem(int d, int t, int w, float t2){
+            date=d;
             time=t;
             weather=w;
             temp=t2;
@@ -270,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView image = (ImageView) retval.findViewById(R.id.img_timeweather_img);
             temp.setText(""+timeWeatherItemList.get(position).temp+"℃");
             setWeatherImage(image, timeWeatherItemList.get(position).weather);
-            title.setText(""+timeWeatherItemList.get(position).time+"시");
+            title.setText(""+timeWeatherItemList.get(position).date+"일 "+timeWeatherItemList.get(position).time+"시");
 
             return retval;
         }
@@ -414,10 +420,15 @@ public class MainActivity extends AppCompatActivity {
 
                             float temp=0;
                             temp = Float.parseFloat(data.categoryValue[8]);
-                            if((int)temp < tempMin)tempMin=(int)temp;
-                            if((int)temp > tempMax)tempMax=(int)temp;
+                            if(i<8) {
+                                if ((int) temp < tempMin) tempMin = (int) temp;
+                                if ((int) temp > tempMax) tempMax = (int) temp;
+                            }
 
-                            timeWeatherItemList.add(new TimeWeatherItem(time, weather, temp));
+                            int date=0;
+                            date=Integer.parseInt(data.date.substring(6));
+
+                            timeWeatherItemList.add(new TimeWeatherItem(date, time, weather, temp));
                         }
                         timeWeatherListView.setAdapter(new HAdapter());
 

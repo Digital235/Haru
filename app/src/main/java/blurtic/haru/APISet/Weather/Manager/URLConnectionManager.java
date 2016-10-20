@@ -35,10 +35,10 @@ import blurtic.haru.MainActivity;
  */
 
 // WindMake(String rawData)
-    // LightMake
-    // typeMake
-    // SkyMake
-    // 중기 예보를 먼저 받고, 그다음 단기 예보를 받아야함
+// LightMake
+// typeMake
+// SkyMake
+// 중기 예보를 먼저 받고, 그다음 단기 예보를 받아야함
 
     /*
         16-07-30
@@ -76,7 +76,7 @@ public class URLConnectionManager extends Thread{
     String middleWeather;
     //00시에 어떤 값을 토대로 측정해야할까
 
-//    String middleTemparature = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature?ServiceKey="+st_key +
+    //    String middleTemparature = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature?ServiceKey="+st_key +
 //            "&regId=11D20501&tmFc=201606150600&pageNo=1&numOfRows=1";
     String middleTemparature;
     String spaceData;
@@ -112,17 +112,24 @@ public class URLConnectionManager extends Thread{
 
     public String makeSpaceDataURL(String inputLocation)
     {
-        LocationInput mLocation = new LocationInput(mContext);
-        String regId = mLocation.makeRegId(inputLocation);
-        String currentDay = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) + mCurrentTimeAndDay.get(DAY);
-        String time = SpaceBaseTime(mCurrentTimeAndDay.get(HOUR));
-        String nx = mLocation.ChangeLonToX();
-        String ny = mLocation.ChangeLatToY();
+//        LocationInput mLocation = new LocationInput(mContext);
+//        String regId = mLocation.makeRegId(inputLocation);
+//        int val =  Integer.valueOf(mCurrentTimeAndDay.get(DAY)) - 1;
+//        String currentDay = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) + val;
+//        String time = SpaceBaseTime(mCurrentTimeAndDay.get(HOUR));
+//        String nx = mLocation.ChangeLonToX();
+//        String ny = mLocation.ChangeLatToY();
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+        String currentDay = dateFormat.format(today);
 
 
         String resultUrl = "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?ServiceKey" +
-        "=msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date="+ currentDay +"&base_time=" + time + "&nx=55&ny=127&numOfRows=300";
-        Log.d("url",resultUrl);
+                "=msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date="+ currentDay +"&base_time=" + "20" + "&nx=55&ny=127&numOfRows=300";
         return resultUrl;
     }
 
@@ -134,11 +141,11 @@ public class URLConnectionManager extends Thread{
         this.mHandler = mData;
     }
 
-     /*
-         makeMiddleLandURL
-         중기 예보 URL Make
+    /*
+        makeMiddleLandURL
+        중기 예보 URL Make
 
-     */
+    */
     public String makeMiddleLandURL(String inputLocation)
     {
         LocationInput mLocation = new LocationInput(mContext);
@@ -148,7 +155,7 @@ public class URLConnectionManager extends Thread{
         String time = MiddleBaseTime(mCurrentTimeAndDay.get(HOUR));
 
         String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleLandWeather?ServiceKey="+st_key+
-                "&regId=" + regId + "&tmFc="+currentDay + time + "&numOfRows=1&pageNo=1";
+                "&regId=" + regId + "&tmFc=" + currentDay + time + "&numOfRows=1&pageNo=1";
         return resultUrl;
     }
 
@@ -165,7 +172,7 @@ public class URLConnectionManager extends Thread{
         String time = MiddleBaseTime(mCurrentTimeAndDay.get(HOUR));
 
         String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature?ServiceKey="+st_key +
-            "&regId="+regId + "&tmFc="+currentDay+time+"&pageNo=1&numOfRows=1";
+                "&regId="+regId + "&tmFc="+currentDay+time+"&pageNo=1&numOfRows=1";
 
 
         return resultUrl;
@@ -267,7 +274,7 @@ public class URLConnectionManager extends Thread{
         중기 온도
 
     */
-   ContentValues RequestURL_MiddleInfoWeather(String urlData,String initial_TagName)
+    ContentValues RequestURL_MiddleInfoWeather(String urlData,String initial_TagName)
     {
         int idx = 0;
         int tagIndex[] = {10,3,4,5,6,7,8,9};
@@ -304,7 +311,7 @@ public class URLConnectionManager extends Thread{
                         mTemp.add(name);
                         mTemp.add(value);
                         mTemp.add("/");
-                       // parserEvent = parser.next();
+                        // parserEvent = parser.next();
 
                         //for (int i = 0; i < tagIndex.length; i++) { // 하나의 item이 끝날 때, 들어감.
 
@@ -338,8 +345,6 @@ public class URLConnectionManager extends Thread{
         - fcstValue
         x
         y
-
-
      */
     ArrayList<SpaceTimeCategory> RequestURL_CurrentTimeInfo(String urlData)
     {
@@ -383,7 +388,6 @@ public class URLConnectionManager extends Thread{
                                 parser_test = parser.getName();
                             }
                             if (parser_test.equals(category[i])) { // Parser 네임
-
                                 String name = parser.getName();
                                 String value = parser.nextText();
                                 mVal.InsideValue(name,value);
@@ -500,38 +504,83 @@ public class URLConnectionManager extends Thread{
     {
         ArrayList<WeatherToTime> time_data = new ArrayList<>();
 
-        String cur_date = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) +
-                (mCurrentTimeAndDay.get(DAY));
-         String st_date1 = cur_date; // + 0 일
+//        String year = mCurrentTimeAndDay.get(YEAR);
+//        String month = mCurrentTimeAndDay.get(MONTH);
+//        String day = mCurrentTimeAndDay.get(DAY);
+//        int integer_day = Integer.valueOf(day);
+//
+//        String cur_date = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) +
+//                (mCurrentTimeAndDay.get(DAY));
+//        String st_date1 = year+month+day; // + 0 일
+//        String st_date2 = year+month+(integer_day+1);
+//        String st_date3 = year+month+(integer_day+2);
+//        String st_date4 = year+month+(integer_day+3);
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
         calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorrow = calendar.getTime();
+        Date afterDay1 = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date afterDay2 = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date afterDay3 = calendar.getTime();
 
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
         String todayAsString = dateFormat.format(today);
-        String tomorrowAsString = dateFormat.format(tomorrow);
+        String afterDay1AsString = dateFormat.format(afterDay1);
+        String afterDay2AsString = dateFormat.format(afterDay2);
+        String afterDay3AsString = dateFormat.format(afterDay3);
 
-        String dateString;
-        if(hour<21) dateString=todayAsString;
-        else dateString = tomorrowAsString;
-
-//        System.out.println(todayAsString);
-//        System.out.println(tomorrowAsString);
-
-        //String test_data = "20161019";
+        //String test_data = "20161014";
         for(int i = 0 ; i < mTime.size(); i++)
         {
             //내부적 루프 돌아서 다넣는 식,
 
             WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
-            //if(st_date1.equals(mTime.get(i).fcstDate))
+            if(todayAsString.equals(mTime.get(i).fcstDate))
             //if(test_data.equals(mTime.get(i).fcstDate))
-            if(dateString.equals(mTime.get(i).fcstDate))
+            {
+                for(int j = i; j < mTime.size(); i++,j++)
+                {
+                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
+                    {
+                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                    }
+                    if(mTemp.isFullAllData()) break;
+                }
+                mTemp.ChangeMapping();
+                time_data.add(mTemp);
+            }else if(afterDay1AsString.equals(mTime.get(i).fcstDate))
+            {
+                for(int j = i; j < mTime.size(); i++,j++)
+                {
+                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
+                    {
+                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                    }
+                    if(mTemp.isFullAllData()) break;
+                }
+                mTemp.ChangeMapping();
+                time_data.add(mTemp);
+
+
+            }else if(afterDay2AsString.equals(mTime.get(i).fcstDate))
+            {
+                for(int j = i; j < mTime.size(); i++,j++)
+                {
+                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
+                    {
+                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                    }
+                    if(mTemp.isFullAllData()) break;
+                }
+                mTemp.ChangeMapping();
+                time_data.add(mTemp);
+            }else if(afterDay3AsString.equals(mTime.get(i).fcstDate))
             {
                 for(int j = i; j < mTime.size(); i++,j++)
                 {
@@ -545,12 +594,11 @@ public class URLConnectionManager extends Thread{
                 time_data.add(mTemp);
             }
 
+
         }
 
 
         //한 날씨에 대한 정보가 아닌,
-
-
         return time_data;
     }
 
@@ -631,7 +679,7 @@ public class URLConnectionManager extends Thread{
 
          */
         ContentToMiddleArrayList(mVal,mVal2);
-        mTotalWeather = new WeatherData(mDayWeather,mTimeWeather);
+        mTotalWeather = new WeatherData(mDayWeather, mTimeWeather);
         //this.mHandler = mHandler;
 //        Message msg =l
 
