@@ -53,8 +53,7 @@ import blurtic.haru.MainActivity;
            Main에서 Handler를 통해서 받을 수 있습니다.
 
      */
-public class URLConnectionManager extends Thread{
-
+public class URLConnectionManager extends Thread {
 
 
     final static int YEAR = 0;
@@ -80,38 +79,34 @@ public class URLConnectionManager extends Thread{
 //            "&regId=11D20501&tmFc=201606150600&pageNo=1&numOfRows=1";
     String middleTemparature;
     String spaceData;
+
     /*
        MiddleBaseTime
        날씨 검색이 되는 시간 매핑
      */
-    String MiddleBaseTime(String hour)
-    {
+    String MiddleBaseTime(String hour) {
 
-        if(Integer.valueOf(hour) > 18) return "1800";
-        if(Integer.valueOf(hour) > 6) return "0600";
+        if (Integer.valueOf(hour) > 18) return "1800";
+        if (Integer.valueOf(hour) > 6) return "0600";
 
         return "0000";
     }
 
-    String SpaceBaseTime(String hour)
-    {
+    String SpaceBaseTime(String hour) {
         CurrentTimeInfo mapping = new CurrentTimeInfo();
         String base_time = mapping.DateTimeMapping(hour);
-        if(base_time == "") return "";
+        if (base_time == "") return "";
 
         return base_time;
     }
 
-    String StringToCategory(String category)
-    {
-
+    String StringToCategory(String category) {
 
 
         return "";
     }
 
-    public String makeSpaceDataURL(String inputLocation)
-    {
+    public String makeSpaceDataURL(String inputLocation) {
 //        LocationInput mLocation = new LocationInput(mContext);
 //        String regId = mLocation.makeRegId(inputLocation);
 //        int val =  Integer.valueOf(mCurrentTimeAndDay.get(DAY)) - 1;
@@ -120,21 +115,44 @@ public class URLConnectionManager extends Thread{
 //        String nx = mLocation.ChangeLonToX();
 //        String ny = mLocation.ChangeLatToY();
 
-        Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
 
+        Calendar calendar = Calendar.getInstance();
+
+
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int minute = Calendar.getInstance().get(Calendar.MINUTE);
+
+        if (hour < 2) {
+            hour = 20;
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }
+        else if (hour < 5) {
+            hour = 23;
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }
+        else if (hour < 8)hour = 2;
+        else if (hour < 11)hour = 5;
+        else if (hour < 14)hour = 8;
+        else if (hour < 17)hour = 11;
+        else if (hour < 20)hour = 14;
+        else if (hour < 23)hour = 17;
+
+        Date today = calendar.getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
         String currentDay = dateFormat.format(today);
+        String baseTime;
+        if (hour < 10) baseTime = "0" + hour + "00";
+        else baseTime = "" + hour + "00";
 
 
         String resultUrl = "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?ServiceKey" +
-                "=msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date="+ currentDay +"&base_time=" + "20" + "&nx=55&ny=127&numOfRows=300";
+                "=msBaq3etrDaXttTCXKAC9yeCoS%2Fn3%2BAARQ3J1727dBNDcGwzhs0Twu%2BDn1PDeKCu8iZtKJ9Mib9w3bXqXSvK2Q%3D%3D&base_date=" + currentDay + "&base_time=" + baseTime + "&nx=55&ny=127&numOfRows=300";
         return resultUrl;
     }
 
 
-    public URLConnectionManager(Context mContext, String inputLocation,MainActivity mData) {
+    public URLConnectionManager(Context mContext, String inputLocation, MainActivity mData) {
         this.mContext = mContext;
         mCurrentTimeAndDay = MakeCurrentDayAndTime();
         this.inputLocation = inputLocation;
@@ -146,15 +164,14 @@ public class URLConnectionManager extends Thread{
         중기 예보 URL Make
 
     */
-    public String makeMiddleLandURL(String inputLocation)
-    {
+    public String makeMiddleLandURL(String inputLocation) {
         LocationInput mLocation = new LocationInput(mContext);
 
         String regId = mLocation.makeRegId(inputLocation);
         String currentDay = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) + mCurrentTimeAndDay.get(DAY);
         String time = MiddleBaseTime(mCurrentTimeAndDay.get(HOUR));
 
-        String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleLandWeather?ServiceKey="+st_key+
+        String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleLandWeather?ServiceKey=" + st_key +
                 "&regId=" + regId + "&tmFc=" + currentDay + time + "&numOfRows=1&pageNo=1";
         return resultUrl;
     }
@@ -165,46 +182,43 @@ public class URLConnectionManager extends Thread{
         중기 온도 URL Make
      */
 
-    public String makeMiddleTempURL(String inputLocation)
-    {
+    public String makeMiddleTempURL(String inputLocation) {
         String regId = "11H10701";
         String currentDay = mCurrentTimeAndDay.get(YEAR) + mCurrentTimeAndDay.get(MONTH) + mCurrentTimeAndDay.get(DAY);
         String time = MiddleBaseTime(mCurrentTimeAndDay.get(HOUR));
 
-        String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature?ServiceKey="+st_key +
-                "&regId="+regId + "&tmFc="+currentDay+time+"&pageNo=1&numOfRows=1";
+        String resultUrl = "http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature?ServiceKey=" + st_key +
+                "&regId=" + regId + "&tmFc=" + currentDay + time + "&pageNo=1&numOfRows=1";
 
 
         return resultUrl;
     }
+
     /*
         MakeCurrentDayAndTime
         현재 시간 측정
         토크나이저로 . 제거 년도(0), 월(1), 일(2), 시간(3), 분(4)
    */
-    public ArrayList<String> MakeCurrentDayAndTime()
-    {
+    public ArrayList<String> MakeCurrentDayAndTime() {
         SimpleDateFormat currentTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm");
 //SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
         String time = currentTime.format(new Date(System.currentTimeMillis()));
 
-        StringTokenizer mToken = new StringTokenizer(time,".");
+        StringTokenizer mToken = new StringTokenizer(time, ".");
         ArrayList<String> mTemp = new ArrayList<>();
-        while(mToken.hasMoreTokens())
-        {
+        while (mToken.hasMoreTokens()) {
             mTemp.add(mToken.nextToken());
         }
 
 
         Log.i(TAG, "time print: " + time);
-        for(int i = 0; i < mTemp.size(); i++)
+        for (int i = 0; i < mTemp.size(); i++)
             Log.i(TAG, "time print: " + mTemp.get(i));
 
         return mTemp;
     }
 
-    public String DateAdd(int afterDay)
-    {
+    public String DateAdd(int afterDay) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DATE, afterDay);
@@ -212,7 +226,7 @@ public class URLConnectionManager extends Thread{
         // 특정 형태의 날짜로 값을 뽑기
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         String strDate = df.format(cal.getTime());
-        Log.i(TAG,"add Date: " + strDate);
+        Log.i(TAG, "add Date: " + strDate);
         return strDate;
     }
 
@@ -274,10 +288,9 @@ public class URLConnectionManager extends Thread{
         중기 온도
 
     */
-    ContentValues RequestURL_MiddleInfoWeather(String urlData,String initial_TagName)
-    {
+    ContentValues RequestURL_MiddleInfoWeather(String urlData, String initial_TagName) {
         int idx = 0;
-        int tagIndex[] = {10,3,4,5,6,7,8,9};
+        int tagIndex[] = {10, 3, 4, 5, 6, 7, 8, 9};
 
         ArrayList<String> mTemp = new ArrayList<>();
 
@@ -303,10 +316,10 @@ public class URLConnectionManager extends Thread{
                 // XML문이 끝날 때 까지 정보를 읽는다
                 if (parserEvent == XmlPullParser.START_TAG) {
                     //시작태그의 이름을 알아냄
-                    if(parser.getName().contains(initial_TagName)) {
+                    if (parser.getName().contains(initial_TagName)) {
                         String name = parser.getName();
                         String value = parser.nextText();
-                        mContent.put(name,value);
+                        mContent.put(name, value);
                         tagName = parser.getName();
                         mTemp.add(name);
                         mTemp.add(value);
@@ -321,17 +334,15 @@ public class URLConnectionManager extends Thread{
                 parserEvent = parser.next();
 
             }
-        }catch(MalformedURLException e){
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        }catch(XmlPullParserException e){
+        } catch (XmlPullParserException e) {
             e.printStackTrace();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return mContent;
     }
-
-
 
 
     /*
@@ -346,8 +357,7 @@ public class URLConnectionManager extends Thread{
         x
         y
      */
-    ArrayList<SpaceTimeCategory> RequestURL_CurrentTimeInfo(String urlData)
-    {
+    ArrayList<SpaceTimeCategory> RequestURL_CurrentTimeInfo(String urlData) {
 
         CurrentTimeInfo mInfo = new CurrentTimeInfo();
         ArrayList<String> mTemp = new ArrayList<>();
@@ -374,15 +384,15 @@ public class URLConnectionManager extends Thread{
             while (parserEvent != XmlPullParser.END_DOCUMENT) {
                 // XML문이 끝날 때 까지 정보를 읽는다
                 Log.i(TAG, "parser : getName() = " + parser.getName());
-                if (parserEvent == XmlPullParser.START_TAG  && parser.getName().equals("item")) {
+                if (parserEvent == XmlPullParser.START_TAG && parser.getName().equals("item")) {
                     //시작태그의 이름을 알아냄
 
                     SpaceTimeCategory mVal = new SpaceTimeCategory();
-                    for( ; ; ) {
+                    for (; ; ) {
 
                         for (int i = 0; i < category.length; i++) {
                             String parser_test = parser.getName();
-                            if(parser_test == null) {
+                            if (parser_test == null) {
                                 i = 0;
                                 parserEvent = parser.next();
                                 parser_test = parser.getName();
@@ -390,7 +400,7 @@ public class URLConnectionManager extends Thread{
                             if (parser_test.equals(category[i])) { // Parser 네임
                                 String name = parser.getName();
                                 String value = parser.nextText();
-                                mVal.InsideValue(name,value);
+                                mVal.InsideValue(name, value);
                                 tagName = parser.getName();
                                 mTemp.add(name);
                                 mTemp.add(value);
@@ -401,25 +411,25 @@ public class URLConnectionManager extends Thread{
                         }
 
                         parserEvent = parser.next();
-                        if(parser.getName() == null) continue;
+                        if (parser.getName() == null) continue;
 
-                        if(parser.getName().equals("item") && parserEvent == XmlPullParser.END_TAG ) break;
+                        if (parser.getName().equals("item") && parserEvent == XmlPullParser.END_TAG)
+                            break;
                     }
                     mSpaceTime.add(mVal);
                 }
                 parserEvent = parser.next();
 
             }
-        }catch(MalformedURLException e){
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        }catch(XmlPullParserException e){
+        } catch (XmlPullParserException e) {
             e.printStackTrace();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return mSpaceTime;
     }
-
 
 
 //    ContentValues RequestURL_MiddleInfoTemparature(URL url)
@@ -481,11 +491,10 @@ public class URLConnectionManager extends Thread{
 //        return mContent;
 //    }
 
-    int isAmorPm(String data)
-    {
-        if(data.contains("Am"))
+    int isAmorPm(String data) {
+        if (data.contains("Am"))
             return MiddleInfo.AM;
-        else if(data.contains("Pm"))
+        else if (data.contains("Pm"))
             return MiddleInfo.PM;
         else
             return MiddleInfo.NOTHING;
@@ -500,8 +509,7 @@ public class URLConnectionManager extends Thread{
         //시간 / 온도만 뽑아내면됨
      */
 
-    public ArrayList<WeatherToTime> ContentToTimeArrayList(ArrayList<SpaceTimeCategory> mTime)
-    {
+    public ArrayList<WeatherToTime> ContentToTimeArrayList(ArrayList<SpaceTimeCategory> mTime) {
         ArrayList<WeatherToTime> time_data = new ArrayList<>();
 
 //        String year = mCurrentTimeAndDay.get(YEAR);
@@ -536,59 +544,47 @@ public class URLConnectionManager extends Thread{
         String afterDay3AsString = dateFormat.format(afterDay3);
 
         //String test_data = "20161014";
-        for(int i = 0 ; i < mTime.size(); i++)
-        {
+        for (int i = 0; i < mTime.size(); i++) {
             //내부적 루프 돌아서 다넣는 식,
 
-            WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate,mTime.get(i).fcstTime,"","");
-            if(todayAsString.equals(mTime.get(i).fcstDate))
+            WeatherToTime mTemp = new WeatherToTime(mTime.get(i).fcstDate, mTime.get(i).fcstTime, "", "");
+            if (todayAsString.equals(mTime.get(i).fcstDate))
             //if(test_data.equals(mTime.get(i).fcstDate))
             {
-                for(int j = i; j < mTime.size(); i++,j++)
-                {
-                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
-                    {
-                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+                for (int j = i; j < mTime.size(); i++, j++) {
+                    if (mTemp.getTime().equals(mTime.get(j).fcstTime)) {
+                        mTemp.HashValue(mTime.get(j).category, mTime.get(j).fcstValue);
                     }
-                    if(mTemp.isFullAllData()) break;
+                    if (mTemp.isFullAllData()) break;
                 }
                 mTemp.ChangeMapping();
                 time_data.add(mTemp);
-            }else if(afterDay1AsString.equals(mTime.get(i).fcstDate))
-            {
-                for(int j = i; j < mTime.size(); i++,j++)
-                {
-                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
-                    {
-                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+            } else if (afterDay1AsString.equals(mTime.get(i).fcstDate)) {
+                for (int j = i; j < mTime.size(); i++, j++) {
+                    if (mTemp.getTime().equals(mTime.get(j).fcstTime)) {
+                        mTemp.HashValue(mTime.get(j).category, mTime.get(j).fcstValue);
                     }
-                    if(mTemp.isFullAllData()) break;
+                    if (mTemp.isFullAllData()) break;
                 }
                 mTemp.ChangeMapping();
                 time_data.add(mTemp);
 
 
-            }else if(afterDay2AsString.equals(mTime.get(i).fcstDate))
-            {
-                for(int j = i; j < mTime.size(); i++,j++)
-                {
-                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
-                    {
-                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+            } else if (afterDay2AsString.equals(mTime.get(i).fcstDate)) {
+                for (int j = i; j < mTime.size(); i++, j++) {
+                    if (mTemp.getTime().equals(mTime.get(j).fcstTime)) {
+                        mTemp.HashValue(mTime.get(j).category, mTime.get(j).fcstValue);
                     }
-                    if(mTemp.isFullAllData()) break;
+                    if (mTemp.isFullAllData()) break;
                 }
                 mTemp.ChangeMapping();
                 time_data.add(mTemp);
-            }else if(afterDay3AsString.equals(mTime.get(i).fcstDate))
-            {
-                for(int j = i; j < mTime.size(); i++,j++)
-                {
-                    if(mTemp.getTime().equals(mTime.get(j).fcstTime))
-                    {
-                        mTemp.HashValue(mTime.get(j).category,mTime.get(j).fcstValue);
+            } else if (afterDay3AsString.equals(mTime.get(i).fcstDate)) {
+                for (int j = i; j < mTime.size(); i++, j++) {
+                    if (mTemp.getTime().equals(mTime.get(j).fcstTime)) {
+                        mTemp.HashValue(mTime.get(j).category, mTime.get(j).fcstValue);
                     }
-                    if(mTemp.isFullAllData()) break;
+                    if (mTemp.isFullAllData()) break;
                 }
                 mTemp.ChangeMapping();
                 time_data.add(mTemp);
@@ -602,19 +598,19 @@ public class URLConnectionManager extends Thread{
         return time_data;
     }
 
-    public void ContentToMiddleArrayList(ContentValues mWeather, ContentValues mTemp)
-    {
+    public void ContentToMiddleArrayList(ContentValues mWeather, ContentValues mTemp) {
         String keyName = "ta";
         String maxString = "Max";
         String minString = "Min";
-        for(int i = 0, j = 0; i < MiddleInfo.checkWeatherData.length;  i++)
-        {
-            String weatherInfo = ""; String time= ""; String max = ""; String min = "";
+        for (int i = 0, j = 0; i < MiddleInfo.checkWeatherData.length; i++) {
+            String weatherInfo = "";
+            String time = "";
+            String max = "";
+            String min = "";
 
             weatherInfo = String.valueOf(mWeather.get(MiddleInfo.checkWeatherData[i]));
             int checkTime = isAmorPm(MiddleInfo.checkWeatherData[i]);
-            switch(checkTime)
-            {
+            switch (checkTime) {
                 case MiddleInfo.AM:
                     time = "Am";
                     break;
@@ -631,9 +627,8 @@ public class URLConnectionManager extends Thread{
             Log.i(TAG, "time : " + time);
             mDayWeather.add(new WeatherToDay(time,
                     DateAdd(MiddleInfo.AfterDay(MiddleInfo.checkWeatherData[i])),
-                    weatherInfo,max,min));
+                    weatherInfo, max, min));
         }
-
 
 
     }
@@ -650,7 +645,7 @@ public class URLConnectionManager extends Thread{
     */
     @Override
     public void run() {
-        super.run( );
+        super.run();
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -661,7 +656,7 @@ public class URLConnectionManager extends Thread{
         mDayWeather = new ArrayList<>();
         middleWeather = makeMiddleLandURL(inputLocation);
         middleTemparature = makeMiddleTempURL(inputLocation);
-        ContentValues mVal=  RequestURL_MiddleInfoWeather(middleWeather,"wf");
+        ContentValues mVal = RequestURL_MiddleInfoWeather(middleWeather, "wf");
         ContentValues mVal2 = RequestURL_MiddleInfoWeather(middleTemparature, "ta");
 
         /*
@@ -678,7 +673,7 @@ public class URLConnectionManager extends Thread{
             Total Data에 단기, 중기 데이터 넣음
 
          */
-        ContentToMiddleArrayList(mVal,mVal2);
+        ContentToMiddleArrayList(mVal, mVal2);
         mTotalWeather = new WeatherData(mDayWeather, mTimeWeather);
         //this.mHandler = mHandler;
 //        Message msg =l
@@ -687,13 +682,12 @@ public class URLConnectionManager extends Thread{
 //        for(int i = 1; ;i++)
 //            if(RequestURLMiddle(i) == 0)  break;
 //Message.obtain() , Handler.obtainMessage
-        Message msg= Message.obtain();
+        Message msg = Message.obtain();
         msg.what = HandlerMessage.THREAD_HANDLER_MIDDLELAND_SUCCESS_INFO;
         msg.obj = mTotalWeather;
         this.mHandler.handler.sendMessage(msg);
         //Thread 작업 종료, UI 작업을 위해 MainHandler에 Message보냄    }
     }
-
 
 
 }
